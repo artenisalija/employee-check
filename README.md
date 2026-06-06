@@ -15,6 +15,9 @@ persistence or prevent administrators from stopping/removing it.
 
 ## Download
 
+Latest release page:
+https://github.com/artenisalija/employee-check/releases/latest
+
 [![Windows Employer](https://img.shields.io/badge/Windows-Employer_Setup-2563eb?logo=windows)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Windows-Employer-Setup.exe)
 [![Windows Employee](https://img.shields.io/badge/Windows-Employee_Setup-2563eb?logo=windows)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Windows-Employee-Setup.exe)
 [![macOS Employer](https://img.shields.io/badge/macOS-Employer_DMG-111827?logo=apple)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-macOS-Employer.dmg)
@@ -27,6 +30,105 @@ persistence or prevent administrators from stopping/removing it.
 | Windows | `EmployeeCheck-Windows-Employer-Setup.exe` | `EmployeeCheck-Windows-Employee-Setup.exe` |
 | macOS | `EmployeeCheck-macOS-Employer.dmg` | `EmployeeCheck-macOS-Employee.dmg` |
 | Linux Debian/Ubuntu | `EmployeeCheck-Linux-Employer-amd64.deb` | `EmployeeCheck-Linux-Employee-amd64.deb` |
+
+Direct download links:
+
+- Windows Employer: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Windows-Employer-Setup.exe
+- Windows Employee: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Windows-Employee-Setup.exe
+- Linux Employer: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employer-amd64.deb
+- Linux Employee: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employee-amd64.deb
+- macOS Employer: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-macOS-Employer.dmg
+- macOS Employee: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-macOS-Employee.dmg
+
+## Install
+
+### Windows
+
+Manager/employer computer:
+
+1. Download `EmployeeCheck-Windows-Employer-Setup.exe`.
+2. Right-click the file and choose **Run as administrator**.
+3. Complete the installer.
+4. Start **Employee Check Employer** from the Start menu or desktop shortcut.
+5. On first run, choose the daily Excel report hour and data-retention days.
+
+Employee computer:
+
+1. Download `EmployeeCheck-Windows-Employee-Setup.exe`.
+2. Right-click the file and choose **Run as administrator**.
+3. Complete the installer.
+4. Start **Employee Check Employee**.
+5. Enter the employee name. If auto-discovery does not find the employer machine,
+   enter the manager computer IP address or hostname manually.
+
+The Windows installers add startup entries automatically.
+
+### Linux Debian/Ubuntu
+
+Manager/employer computer:
+
+```bash
+wget https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employer-amd64.deb
+sudo apt install ./EmployeeCheck-Linux-Employer-amd64.deb
+```
+
+Employee computer:
+
+```bash
+wget https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employee-amd64.deb
+sudo apt install ./EmployeeCheck-Linux-Employee-amd64.deb
+```
+
+After installing, launch the app from the desktop application menu:
+
+- Manager: **Employee Check Employer**
+- Employee: **Employee Check Employee**
+
+The Linux DEB packages add desktop startup entries automatically. Active-window
+and idle detection work best on X11. On Linux, install these optional tools for
+better detection:
+
+```bash
+sudo apt install xdotool xprintidle
+```
+
+### macOS
+
+Manager/employer computer:
+
+1. Download `EmployeeCheck-macOS-Employer.dmg`.
+2. Open the DMG and launch **Employee Check Employer**.
+3. If macOS blocks the app because it is unsigned, open **System Settings >
+   Privacy & Security** and allow it.
+4. Use **Install Startup** inside the app if you want it to start with the Mac.
+
+Employee computer:
+
+1. Download `EmployeeCheck-macOS-Employee.dmg`.
+2. Open the DMG and launch **Employee Check Employee**.
+3. Enter the employee name and employer machine address if auto-discovery fails.
+4. Use **Install Startup** inside the app if you want it to start with the Mac.
+
+macOS may ask for Accessibility or Automation permissions before active-window
+titles or browser URLs are visible.
+
+## Quick Test
+
+For a first test with one Windows manager PC and one Linux employee machine:
+
+1. Install the Windows Employer setup file on the manager PC.
+2. Start **Employee Check Employer** and leave it running.
+3. Install the Linux Employee DEB on the Linux machine:
+
+```bash
+wget https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employee-amd64.deb
+sudo apt install ./EmployeeCheck-Linux-Employee-amd64.deb
+```
+
+4. Start **Employee Check Employee** on Linux.
+5. Enter the employee name.
+6. If auto-discovery fails, enter the Windows manager PC IP address.
+7. Confirm the Linux employee appears in the Windows employer dashboard.
 
 ## Features
 
@@ -54,7 +156,7 @@ Unsigned Windows/macOS builds may show operating-system security warnings. For
 company rollout, sign and notarize the release artifacts through your normal IT
 process.
 
-## Setup
+## Setup Notes
 
 1. Install the **Employer** package on the manager machine first.
 2. Start Employee Check Employer. The first run asks for daily report hour and
