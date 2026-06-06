@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "employee-check"
-version = "0.1.0"
+version = "0.1.1"
 description = "Cross-platform LAN employee monitoring dashboard and visible employee agent."
 requires-python = ">=3.10"
 dependencies = [
@@ -19,4 +19,3 @@ employee-check = "employee_check.main:main"
 
 [tool.setuptools.packages.find]
 include = ["employee_check*"]
-

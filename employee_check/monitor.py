@@ -25,14 +25,15 @@ BROWSER_APPS = {
 
 
 def collect_snapshot(employee_name: str, machine_name: str, manual_status: str) -> EmployeeSnapshot:
-    idle = idle_seconds()
+    active_window = get_active_window()
+    idle = idle_seconds(_activity_signature(active_window))
     return EmployeeSnapshot(
         employee_name=employee_name,
         machine_name=machine_name,
         manual_status=manual_status,
         idle_seconds=idle,
         idle_band=idle_band(idle),
-        active_window=get_active_window(),
+        active_window=active_window,
         open_apps=list_open_apps(),
     )
 
@@ -61,6 +62,18 @@ def get_active_window() -> ActiveWindow:
     if system == "Linux":
         return _linux_active_window()
     return ActiveWindow()
+
+
+def _activity_signature(active_window: ActiveWindow) -> str:
+    return "|".join(
+        [
+            active_window.app_name,
+            active_window.process_name,
+            str(active_window.pid or ""),
+            active_window.title,
+            active_window.url,
+        ]
+    )
 
 
 def _windows_active_window() -> ActiveWindow:
@@ -154,4 +167,3 @@ def _run_cmd(args: list[str], timeout: float = 2.0) -> str:
     if result.returncode != 0:
         return ""
     return result.stdout.strip()
-

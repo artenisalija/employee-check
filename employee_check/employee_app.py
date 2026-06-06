@@ -12,6 +12,7 @@ from .monitor import collect_snapshot
 from .net import discover_server, send_json
 from .startup import install_startup
 from .tray import start_employee_tray
+from .updates import check_for_update, open_download_page
 
 
 STATUS_LABELS = {
@@ -23,9 +24,16 @@ STATUS_LABELS = {
 
 IDLE_COLORS = {
     "active": "#2f855a",
-    "yellow": "#b7791f",
-    "orange": "#c05621",
+    "yellow": "#f6e05e",
+    "orange": "#dd6b20",
     "red": "#c53030",
+}
+
+IDLE_FOREGROUNDS = {
+    "active": "#ffffff",
+    "yellow": "#1a202c",
+    "orange": "#1a202c",
+    "red": "#ffffff",
 }
 
 
@@ -97,7 +105,16 @@ class EmployeeApp:
         self.idle_var = tk.StringVar(value="Idle: unknown")
         self.active_var = tk.StringVar(value="Active app: unknown")
         self.title_var = tk.StringVar(value="Title/URL: unknown")
-        ttk.Label(live_frame, textvariable=self.idle_var).grid(row=0, column=0, columnspan=2, sticky="w")
+        self.idle_badge = tk.Label(
+            live_frame,
+            textvariable=self.idle_var,
+            bg=IDLE_COLORS["active"],
+            fg=IDLE_FOREGROUNDS["active"],
+            padx=8,
+            pady=4,
+            anchor="w",
+        )
+        self.idle_badge.grid(row=0, column=0, columnspan=2, sticky="w")
         ttk.Label(live_frame, textvariable=self.active_var).grid(row=1, column=0, columnspan=2, sticky="w", pady=(6, 0))
         ttk.Label(live_frame, textvariable=self.title_var, wraplength=470).grid(
             row=2, column=0, columnspan=2, sticky="w", pady=(6, 0)
@@ -117,6 +134,7 @@ class EmployeeApp:
         footer.grid(row=5, column=0, sticky="ew")
         ttk.Button(footer, text="Install Startup", command=self._install_startup).grid(row=0, column=0, sticky="w")
         ttk.Button(footer, text="Show Window", command=self._show_window).grid(row=0, column=1, sticky="w", padx=(8, 0))
+        ttk.Button(footer, text="Check Updates", command=self._check_updates).grid(row=0, column=2, sticky="w", padx=(8, 0))
 
     def _ensure_config(self) -> None:
         changed = False
@@ -176,6 +194,13 @@ class EmployeeApp:
             return
         messagebox.showinfo("Startup", f"Startup entry installed:\n{path}")
 
+    def _check_updates(self) -> None:
+        threading.Thread(target=self._check_updates_worker, name="employee-update-check", daemon=True).start()
+
+    def _check_updates_worker(self) -> None:
+        result = check_for_update()
+        self.events.put(("update", result))
+
     def _hide_window(self) -> None:
         if self.tray_icon:
             self.root.withdraw()
@@ -225,12 +250,18 @@ class EmployeeApp:
                 self._render_snapshot(payload)
             elif event == "connection":
                 self._refresh_identity_labels()
+            elif event == "update":
+                self._show_update_result(payload)
         self.root.after(500, self._drain_events)
 
     def _render_snapshot(self, snapshot) -> None:
         self._refresh_identity_labels()
         idle_text = _format_idle(snapshot.idle_seconds)
         self.idle_var.set(f"Idle: {idle_text} ({snapshot.idle_band})")
+        self.idle_badge.configure(
+            bg=IDLE_COLORS.get(snapshot.idle_band, IDLE_COLORS["active"]),
+            fg=IDLE_FOREGROUNDS.get(snapshot.idle_band, IDLE_FOREGROUNDS["active"]),
+        )
         active = snapshot.active_window.app_name or snapshot.active_window.process_name or "unknown"
         self.active_var.set(f"Active app: {active}")
         title_or_url = snapshot.active_window.url or snapshot.active_window.title or "unknown"
@@ -240,6 +271,22 @@ class EmployeeApp:
             self.apps_list.insert(tk.END, app)
         if snapshot.idle_band == "red" and self.manual_status == STATUS_CHECKED_IN:
             self.root.bell()
+
+    def _show_update_result(self, result) -> None:
+        if result.error:
+            messagebox.showerror("Updates", f"Could not check for updates:\n{result.error}")
+            return
+        if result.is_update_available:
+            should_open = messagebox.askyesno(
+                "Updates",
+                f"Version {result.latest_version} is available.\n"
+                f"Current version: {result.current_version}\n\n"
+                "Open the download page?",
+            )
+            if should_open:
+                open_download_page(result.release_url)
+            return
+        messagebox.showinfo("Updates", f"Employee Check is up to date.\nVersion: {result.current_version}")
 
 
 def _format_idle(seconds: float) -> str:

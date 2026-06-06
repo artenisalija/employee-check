@@ -9,6 +9,7 @@ def start_employee_tray(app: Any) -> object | None:
         "Employee Check",
         [
             ("Show Window", lambda: app.root.after(0, app._show_window_on_main_thread)),
+            ("Check Updates", lambda: app.root.after(0, app._check_updates)),
             ("Check In", lambda: app.root.after(0, app._set_status, "checked_in")),
             ("Lunch", lambda: app.root.after(0, app._set_status, "lunch")),
             ("Meeting", lambda: app.root.after(0, app._set_status, "meeting")),
@@ -22,6 +23,7 @@ def start_employer_tray(app: Any) -> object | None:
         "Employee Check Employer",
         [
             ("Show Dashboard", lambda: app.root.after(0, app._show_window_on_main_thread)),
+            ("Check Updates", lambda: app.root.after(0, app._check_updates)),
             ("Generate Excel Now", lambda: app.root.after(0, app._generate_report_now)),
             ("Open Reports Folder", lambda: app.root.after(0, app._open_reports_folder)),
         ],

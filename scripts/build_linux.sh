@@ -24,6 +24,58 @@ mkdir -p dist
 .venv/bin/pyinstaller --noconfirm --clean --windowed --name EmployeeCheckEmployer --onefile run_employee_check_employer.py
 .venv/bin/pyinstaller --noconfirm --clean --windowed --name EmployeeCheckEmployee --onefile run_employee_check_employee.py
 
+build_tar() {
+  local role_arg="$1"
+  local role_name="$2"
+  local exe_name="$3"
+  local folder_name="EmployeeCheck-Linux-${role_name}-x86_64"
+  local package_root="build/${folder_name}"
+  local command_name="employee-check-${role_arg}"
+  local desktop_id="employee-check-${role_arg}"
+
+  rm -rf "$package_root"
+  mkdir -p "$package_root"
+  cp "dist/${exe_name}" "$package_root/${exe_name}"
+  chmod 755 "$package_root/${exe_name}"
+
+  cat > "$package_root/install.sh" <<EOF
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ "\${EUID}" -ne 0 ]; then
+  exec sudo "\$0" "\$@"
+fi
+
+SOURCE_DIR="\$(cd "\$(dirname "\${BASH_SOURCE[0]}")" && pwd)"
+INSTALL_DIR="/opt/employee-check"
+EXE_NAME="${exe_name}"
+ROLE_NAME="${role_name}"
+COMMAND_NAME="${command_name}"
+DESKTOP_ID="${desktop_id}"
+
+mkdir -p "\${INSTALL_DIR}"
+install -m 755 "\${SOURCE_DIR}/\${EXE_NAME}" "\${INSTALL_DIR}/\${EXE_NAME}"
+ln -sf "\${INSTALL_DIR}/\${EXE_NAME}" "/usr/local/bin/\${COMMAND_NAME}"
+
+mkdir -p /usr/share/applications /etc/xdg/autostart
+cat > "/usr/share/applications/\${DESKTOP_ID}.desktop" <<DESKTOP
+[Desktop Entry]
+Type=Application
+Name=Employee Check \${ROLE_NAME}
+Exec=\${INSTALL_DIR}/\${EXE_NAME}
+Terminal=false
+Categories=Office;Utility;
+DESKTOP
+
+cp "/usr/share/applications/\${DESKTOP_ID}.desktop" "/etc/xdg/autostart/\${DESKTOP_ID}.desktop"
+echo "Installed Employee Check \${ROLE_NAME}."
+echo "Run it from the application menu or with: \${COMMAND_NAME}"
+EOF
+  chmod 755 "$package_root/install.sh"
+
+  tar -C build -czf "dist/${folder_name}.tar.gz" "$folder_name"
+}
+
 build_deb() {
   local role_arg="$1"
   local role_name="$2"
@@ -67,5 +119,7 @@ EOF
 
 build_deb "employer" "Employer" "EmployeeCheckEmployer"
 build_deb "employee" "Employee" "EmployeeCheckEmployee"
+build_tar "employer" "Employer" "EmployeeCheckEmployer"
+build_tar "employee" "Employee" "EmployeeCheckEmployee"
 
-echo "Built Linux DEB packages in dist/"
+echo "Built Linux DEB and tar.gz packages in dist/"

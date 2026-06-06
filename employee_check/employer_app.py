@@ -17,6 +17,22 @@ from .reporting import generate_daily_report
 from .startup import install_startup
 from .storage import EmployerStore
 from .tray import start_employer_tray
+from .updates import check_for_update, open_download_page
+
+
+IDLE_COLORS = {
+    "active": "#e6ffed",
+    "yellow": "#fefcbf",
+    "orange": "#feebc8",
+    "red": "#fed7d7",
+}
+
+IDLE_BADGE_COLORS = {
+    "active": ("#2f855a", "#ffffff"),
+    "yellow": ("#f6e05e", "#1a202c"),
+    "orange": ("#dd6b20", "#1a202c"),
+    "red": ("#c53030", "#ffffff"),
+}
 
 
 class EmployerApp:
@@ -47,26 +63,27 @@ class EmployerApp:
 
     def _load_latest_snapshots(self) -> None:
         for row in self.store.latest_snapshots():
+            row_data = dict(row)
             open_apps = []
             try:
-                open_apps = json.loads(row.get("open_apps_json") or "[]")
+                open_apps = json.loads(row_data.get("open_apps_json") or "[]")
             except json.JSONDecodeError:
                 open_apps = []
-            self.snapshots_by_machine[row["machine_name"]] = {
-                "employee_name": row["employee_name"],
-                "machine_name": row["machine_name"],
-                "manual_status": row["manual_status"],
-                "idle_seconds": row["idle_seconds"],
-                "idle_band": row["idle_band"],
+            self.snapshots_by_machine[row_data["machine_name"]] = {
+                "employee_name": row_data["employee_name"],
+                "machine_name": row_data["machine_name"],
+                "manual_status": row_data["manual_status"],
+                "idle_seconds": row_data["idle_seconds"],
+                "idle_band": row_data["idle_band"],
                 "active_window": {
-                    "app_name": row.get("active_app") or "",
-                    "process_name": row.get("active_process") or "",
-                    "title": row.get("active_title") or "",
-                    "url": row.get("active_url") or "",
+                    "app_name": row_data.get("active_app") or "",
+                    "process_name": row_data.get("active_process") or "",
+                    "title": row_data.get("active_title") or "",
+                    "url": row_data.get("active_url") or "",
                     "pid": None,
                 },
                 "open_apps": open_apps,
-                "timestamp": row["timestamp"],
+                "timestamp": row_data["timestamp"],
             }
         if self.snapshots_by_machine:
             self._render_tree()
@@ -123,9 +140,9 @@ class EmployerApp:
 
         controls = ttk.LabelFrame(self.root, text="Settings", padding=12)
         controls.grid(row=1, column=0, sticky="ew", padx=16, pady=8)
-        for col in range(7):
+        for col in range(8):
             controls.columnconfigure(col, weight=0)
-        controls.columnconfigure(7, weight=1)
+        controls.columnconfigure(8, weight=1)
         self.report_hour_var = tk.IntVar(value=self.config.report_hour)
         self.retention_var = tk.IntVar(value=self.config.retention_days)
         ttk.Label(controls, text="Report hour").grid(row=0, column=0, sticky="w")
@@ -142,6 +159,9 @@ class EmployerApp:
         )
         ttk.Button(controls, text="Open Reports Folder", command=self._open_reports_folder).grid(
             row=0, column=6, sticky="w", padx=(8, 0)
+        )
+        ttk.Button(controls, text="Check Updates", command=self._check_updates).grid(
+            row=0, column=7, sticky="w", padx=(8, 0)
         )
 
         body = ttk.PanedWindow(self.root, orient=tk.HORIZONTAL)
@@ -177,6 +197,10 @@ class EmployerApp:
         tree_scroll = ttk.Scrollbar(list_frame, command=self.tree.yview)
         tree_scroll.grid(row=0, column=1, sticky="ns")
         self.tree.configure(yscrollcommand=tree_scroll.set)
+        self.tree.tag_configure("active", background=IDLE_COLORS["active"])
+        self.tree.tag_configure("yellow", background=IDLE_COLORS["yellow"])
+        self.tree.tag_configure("orange", background=IDLE_COLORS["orange"])
+        self.tree.tag_configure("red", background=IDLE_COLORS["red"])
         self.tree.bind("<<TreeviewSelect>>", self._on_select)
         body.add(list_frame, weight=3)
 
@@ -205,9 +229,21 @@ class EmployerApp:
         ]
         for row, (label, key) in enumerate(labels):
             ttk.Label(detail_frame, text=label).grid(row=row, column=0, sticky="nw", pady=3)
-            ttk.Label(detail_frame, textvariable=self.detail_vars[key], wraplength=320).grid(
-                row=row, column=1, sticky="nw", padx=(10, 0), pady=3
-            )
+            if key == "idle":
+                self.detail_idle_badge = tk.Label(
+                    detail_frame,
+                    textvariable=self.detail_vars[key],
+                    bg=IDLE_BADGE_COLORS["active"][0],
+                    fg=IDLE_BADGE_COLORS["active"][1],
+                    padx=8,
+                    pady=4,
+                    anchor="w",
+                )
+                self.detail_idle_badge.grid(row=row, column=1, sticky="nw", padx=(10, 0), pady=3)
+            else:
+                ttk.Label(detail_frame, textvariable=self.detail_vars[key], wraplength=320).grid(
+                    row=row, column=1, sticky="nw", padx=(10, 0), pady=3
+                )
         ttk.Label(detail_frame, text="Open Apps").grid(row=8, column=0, sticky="nw", pady=(10, 0))
         apps_box_frame = ttk.Frame(detail_frame)
         apps_box_frame.grid(row=8, column=1, sticky="nsew", padx=(10, 0), pady=(10, 0))
@@ -243,6 +279,8 @@ class EmployerApp:
                 updated = True
             elif event == "status":
                 self.status_var.set(str(payload))
+            elif event == "update":
+                self._show_update_result(payload)
         if updated:
             self._render_tree()
         self.root.after(1000, self._refresh_loop)
@@ -268,10 +306,11 @@ class EmployerApp:
                 title_or_url,
                 snapshot.get("timestamp", ""),
             )
+            band = snapshot.get("idle_band", "active")
             if machine in existing:
-                self.tree.item(machine, values=values)
+                self.tree.item(machine, values=values, tags=(band,))
             else:
-                self.tree.insert("", tk.END, iid=machine, values=values)
+                self.tree.insert("", tk.END, iid=machine, values=values, tags=(band,))
         if selected and selected in self.snapshots_by_machine:
             self.tree.selection_set(selected)
             self._render_detail(self.snapshots_by_machine[selected])
@@ -293,6 +332,8 @@ class EmployerApp:
         self.detail_vars["idle"].set(
             f"{_format_idle(float(snapshot.get('idle_seconds', 0)))} / {snapshot.get('idle_band', '')}"
         )
+        badge_bg, badge_fg = IDLE_BADGE_COLORS.get(snapshot.get("idle_band", "active"), IDLE_BADGE_COLORS["active"])
+        self.detail_idle_badge.configure(bg=badge_bg, fg=badge_fg)
         self.detail_vars["active_app"].set(active.get("app_name") or active.get("process_name") or "")
         self.detail_vars["active_title"].set(active.get("title") or "")
         self.detail_vars["active_url"].set(active.get("url") or "")
@@ -355,6 +396,29 @@ class EmployerApp:
             messagebox.showerror("Startup", f"Could not install startup entry:\n{exc}")
             return
         messagebox.showinfo("Startup", f"Startup entry installed:\n{path}")
+
+    def _check_updates(self) -> None:
+        threading.Thread(target=self._check_updates_worker, name="employer-update-check", daemon=True).start()
+
+    def _check_updates_worker(self) -> None:
+        result = check_for_update()
+        self.events.put(("update", result))
+
+    def _show_update_result(self, result) -> None:
+        if result.error:
+            messagebox.showerror("Updates", f"Could not check for updates:\n{result.error}")
+            return
+        if result.is_update_available:
+            should_open = messagebox.askyesno(
+                "Updates",
+                f"Version {result.latest_version} is available.\n"
+                f"Current version: {result.current_version}\n\n"
+                "Open the download page?",
+            )
+            if should_open:
+                open_download_page(result.release_url)
+            return
+        messagebox.showinfo("Updates", f"Employee Check is up to date.\nVersion: {result.current_version}")
 
     def _hide_window(self) -> None:
         if self.tray_icon:
