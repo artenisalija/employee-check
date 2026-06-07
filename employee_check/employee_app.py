@@ -7,6 +7,7 @@ import tkinter as tk
 from datetime import datetime, timezone
 from tkinter import messagebox, simpledialog, ttk
 
+from . import __version__
 from .config import EmployeeConfig, load_employee_config, save_employee_config
 from .models import (
     STATUSES,
@@ -172,6 +173,7 @@ class EmployeeApp:
         ttk.Button(footer, text="Install Startup", command=self._install_startup).grid(row=0, column=0, sticky="w")
         ttk.Button(footer, text="Show Window", command=self._show_window).grid(row=0, column=1, sticky="w", padx=(8, 0))
         ttk.Button(footer, text="Check Updates", command=self._check_updates).grid(row=0, column=2, sticky="w", padx=(8, 0))
+        ttk.Button(footer, text="About", command=self._show_about).grid(row=0, column=3, sticky="w", padx=(8, 0))
 
     def _ensure_config(self) -> None:
         changed = False
@@ -375,6 +377,14 @@ class EmployeeApp:
                 open_download_page(result.release_url)
             return
         messagebox.showinfo("Updates", f"Employee Check is up to date.\nVersion: {result.current_version}")
+
+    def _show_about(self) -> None:
+        messagebox.showinfo(
+            "About Employee Check",
+            f"Employee Check Employee\n"
+            f"Version: {__version__}\n"
+            f"Machine: {self.config.normalized_machine_name()}",
+        )
 
 
 def _format_idle(seconds: float) -> str:

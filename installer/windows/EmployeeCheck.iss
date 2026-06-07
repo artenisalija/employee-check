@@ -1,5 +1,5 @@
 #ifndef AppVersion
-#define AppVersion "0.1.0"
+#define AppVersion "0.1.4"
 #endif
 
 #ifndef RoleName
@@ -11,7 +11,7 @@
 #endif
 
 #ifndef OutputBaseFilename
-#define OutputBaseFilename "EmployeeCheck-Windows-Employee-Setup"
+#define OutputBaseFilename "EmployeeCheck-v0.1.4-Windows-Employee-Setup"
 #endif
 
 [Setup]

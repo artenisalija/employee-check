@@ -34,7 +34,7 @@ if ($Installer) {
     }
 
     New-Item -ItemType Directory -Force -Path "dist\installers" | Out-Null
-    & $IsccPath /DAppVersion="$Version" /DRoleName="Employer" /DRoleArg="employer" /DOutputBaseFilename="EmployeeCheck-Windows-Employer-Setup" "installer\windows\EmployeeCheck.iss"
-    & $IsccPath /DAppVersion="$Version" /DRoleName="Employee" /DRoleArg="employee" /DOutputBaseFilename="EmployeeCheck-Windows-Employee-Setup" "installer\windows\EmployeeCheck.iss"
+    & $IsccPath /DAppVersion="$Version" /DRoleName="Employer" /DRoleArg="employer" /DOutputBaseFilename="EmployeeCheck-v$Version-Windows-Employer-Setup" "installer\windows\EmployeeCheck.iss"
+    & $IsccPath /DAppVersion="$Version" /DRoleName="Employee" /DRoleArg="employee" /DOutputBaseFilename="EmployeeCheck-v$Version-Windows-Employee-Setup" "installer\windows\EmployeeCheck.iss"
     Write-Host "Built Windows installers in dist\installers"
 }

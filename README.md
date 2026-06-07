@@ -18,32 +18,32 @@ persistence or prevent administrators from stopping/removing it.
 Latest release page:
 https://github.com/artenisalija/employee-check/releases/latest
 
-[![Windows Employer](https://img.shields.io/badge/Windows-Employer_Setup-2563eb?logo=windows)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Windows-Employer-Setup.exe)
-[![Windows Employee](https://img.shields.io/badge/Windows-Employee_Setup-2563eb?logo=windows)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Windows-Employee-Setup.exe)
-[![macOS Employer](https://img.shields.io/badge/macOS-Employer_DMG-111827?logo=apple)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-macOS-Employer.dmg)
-[![macOS Employee](https://img.shields.io/badge/macOS-Employee_DMG-111827?logo=apple)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-macOS-Employee.dmg)
-[![Linux Employer](https://img.shields.io/badge/Linux-Employer_DEB-f97316?logo=linux)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employer-amd64.deb)
-[![Linux Employee](https://img.shields.io/badge/Linux-Employee_DEB-f97316?logo=linux)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employee-amd64.deb)
-[![Linux Employer tar.gz](https://img.shields.io/badge/Linux-Employer_tar.gz-16a34a?logo=linux)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employer-x86_64.tar.gz)
-[![Linux Employee tar.gz](https://img.shields.io/badge/Linux-Employee_tar.gz-16a34a?logo=linux)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employee-x86_64.tar.gz)
+[![Windows Employer](https://img.shields.io/badge/Windows-Employer_Setup-2563eb?logo=windows)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Windows-Employer-Setup.exe)
+[![Windows Employee](https://img.shields.io/badge/Windows-Employee_Setup-2563eb?logo=windows)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Windows-Employee-Setup.exe)
+[![macOS Employer](https://img.shields.io/badge/macOS-Employer_DMG-111827?logo=apple)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-macOS-Employer.dmg)
+[![macOS Employee](https://img.shields.io/badge/macOS-Employee_DMG-111827?logo=apple)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-macOS-Employee.dmg)
+[![Linux Employer](https://img.shields.io/badge/Linux-Employer_DEB-f97316?logo=linux)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employer-amd64.deb)
+[![Linux Employee](https://img.shields.io/badge/Linux-Employee_DEB-f97316?logo=linux)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employee-amd64.deb)
+[![Linux Employer tar.gz](https://img.shields.io/badge/Linux-Employer_tar.gz-16a34a?logo=linux)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz)
+[![Linux Employee tar.gz](https://img.shields.io/badge/Linux-Employee_tar.gz-16a34a?logo=linux)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz)
 
 | Platform | Employer machine | Employee machines |
 | --- | --- | --- |
-| Windows | `EmployeeCheck-Windows-Employer-Setup.exe` | `EmployeeCheck-Windows-Employee-Setup.exe` |
-| macOS | `EmployeeCheck-macOS-Employer.dmg` | `EmployeeCheck-macOS-Employee.dmg` |
-| Linux Debian/Ubuntu | `EmployeeCheck-Linux-Employer-amd64.deb` | `EmployeeCheck-Linux-Employee-amd64.deb` |
-| Other Linux x86_64 | `EmployeeCheck-Linux-Employer-x86_64.tar.gz` | `EmployeeCheck-Linux-Employee-x86_64.tar.gz` |
+| Windows | `EmployeeCheck-v0.1.4-Windows-Employer-Setup.exe` | `EmployeeCheck-v0.1.4-Windows-Employee-Setup.exe` |
+| macOS | `EmployeeCheck-v0.1.4-macOS-Employer.dmg` | `EmployeeCheck-v0.1.4-macOS-Employee.dmg` |
+| Linux Debian/Ubuntu | `EmployeeCheck-v0.1.4-Linux-Employer-amd64.deb` | `EmployeeCheck-v0.1.4-Linux-Employee-amd64.deb` |
+| Other Linux x86_64 | `EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz` | `EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz` |
 
 Direct download links:
 
-- Windows Employer: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Windows-Employer-Setup.exe
-- Windows Employee: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Windows-Employee-Setup.exe
-- Linux Employer: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employer-amd64.deb
-- Linux Employee: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employee-amd64.deb
-- Linux Employer tar.gz: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employer-x86_64.tar.gz
-- Linux Employee tar.gz: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employee-x86_64.tar.gz
-- macOS Employer: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-macOS-Employer.dmg
-- macOS Employee: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-macOS-Employee.dmg
+- Windows Employer: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Windows-Employer-Setup.exe
+- Windows Employee: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Windows-Employee-Setup.exe
+- Linux Employer: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employer-amd64.deb
+- Linux Employee: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employee-amd64.deb
+- Linux Employer tar.gz: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz
+- Linux Employee tar.gz: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz
+- macOS Employer: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-macOS-Employer.dmg
+- macOS Employee: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-macOS-Employee.dmg
 
 ## Install
 
@@ -51,7 +51,7 @@ Direct download links:
 
 Manager/employer computer:
 
-1. Download `EmployeeCheck-Windows-Employer-Setup.exe`.
+1. Download `EmployeeCheck-v0.1.4-Windows-Employer-Setup.exe`.
 2. Right-click the file and choose **Run as administrator**.
 3. Complete the installer.
 4. Start **Employee Check Employer** from the Start menu or desktop shortcut.
@@ -59,7 +59,7 @@ Manager/employer computer:
 
 Employee computer:
 
-1. Download `EmployeeCheck-Windows-Employee-Setup.exe`.
+1. Download `EmployeeCheck-v0.1.4-Windows-Employee-Setup.exe`.
 2. Right-click the file and choose **Run as administrator**.
 3. Complete the installer.
 4. Start **Employee Check Employee**.
@@ -81,15 +81,15 @@ Updating on Windows:
 Manager/employer computer:
 
 ```bash
-wget https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employer-amd64.deb
-sudo apt install ./EmployeeCheck-Linux-Employer-amd64.deb
+wget https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employer-amd64.deb
+sudo apt install ./EmployeeCheck-v0.1.4-Linux-Employer-amd64.deb
 ```
 
 Employee computer:
 
 ```bash
-wget https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employee-amd64.deb
-sudo apt install ./EmployeeCheck-Linux-Employee-amd64.deb
+wget https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employee-amd64.deb
+sudo apt install ./EmployeeCheck-v0.1.4-Linux-Employee-amd64.deb
 ```
 
 ### Fedora/RHEL/Rocky Linux
@@ -97,17 +97,17 @@ sudo apt install ./EmployeeCheck-Linux-Employee-amd64.deb
 Manager/employer computer:
 
 ```bash
-curl -L -o EmployeeCheck-Linux-Employer-x86_64.tar.gz https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employer-x86_64.tar.gz
-tar -xzf EmployeeCheck-Linux-Employer-x86_64.tar.gz
-sudo ./EmployeeCheck-Linux-Employer-x86_64/install.sh
+curl -L -o EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz
+tar -xzf EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz
+sudo ./EmployeeCheck-v0.1.4-Linux-Employer-x86_64/install.sh
 ```
 
 Employee computer:
 
 ```bash
-curl -L -o EmployeeCheck-Linux-Employee-x86_64.tar.gz https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employee-x86_64.tar.gz
-tar -xzf EmployeeCheck-Linux-Employee-x86_64.tar.gz
-sudo ./EmployeeCheck-Linux-Employee-x86_64/install.sh
+curl -L -o EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz
+tar -xzf EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz
+sudo ./EmployeeCheck-v0.1.4-Linux-Employee-x86_64/install.sh
 ```
 
 Optional X11 idle/window helpers:
@@ -121,17 +121,17 @@ sudo dnf install xdotool xprintidle
 Manager/employer computer:
 
 ```bash
-curl -L -o EmployeeCheck-Linux-Employer-x86_64.tar.gz https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employer-x86_64.tar.gz
-tar -xzf EmployeeCheck-Linux-Employer-x86_64.tar.gz
-sudo ./EmployeeCheck-Linux-Employer-x86_64/install.sh
+curl -L -o EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz
+tar -xzf EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz
+sudo ./EmployeeCheck-v0.1.4-Linux-Employer-x86_64/install.sh
 ```
 
 Employee computer:
 
 ```bash
-curl -L -o EmployeeCheck-Linux-Employee-x86_64.tar.gz https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employee-x86_64.tar.gz
-tar -xzf EmployeeCheck-Linux-Employee-x86_64.tar.gz
-sudo ./EmployeeCheck-Linux-Employee-x86_64/install.sh
+curl -L -o EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz
+tar -xzf EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz
+sudo ./EmployeeCheck-v0.1.4-Linux-Employee-x86_64/install.sh
 ```
 
 Optional X11 idle/window helpers:
@@ -145,17 +145,17 @@ sudo zypper install xdotool xprintidle
 Manager/employer computer:
 
 ```bash
-curl -L -o EmployeeCheck-Linux-Employer-x86_64.tar.gz https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employer-x86_64.tar.gz
-tar -xzf EmployeeCheck-Linux-Employer-x86_64.tar.gz
-sudo ./EmployeeCheck-Linux-Employer-x86_64/install.sh
+curl -L -o EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz
+tar -xzf EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz
+sudo ./EmployeeCheck-v0.1.4-Linux-Employer-x86_64/install.sh
 ```
 
 Employee computer:
 
 ```bash
-curl -L -o EmployeeCheck-Linux-Employee-x86_64.tar.gz https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employee-x86_64.tar.gz
-tar -xzf EmployeeCheck-Linux-Employee-x86_64.tar.gz
-sudo ./EmployeeCheck-Linux-Employee-x86_64/install.sh
+curl -L -o EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz
+tar -xzf EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz
+sudo ./EmployeeCheck-v0.1.4-Linux-Employee-x86_64/install.sh
 ```
 
 Optional X11 idle/window helpers:
@@ -169,9 +169,9 @@ sudo pacman -S xdotool xprintidle
 Use the same `.tar.gz` package for any other x86_64 desktop Linux distro:
 
 ```bash
-curl -L -o EmployeeCheck-Linux-Employee-x86_64.tar.gz https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employee-x86_64.tar.gz
-tar -xzf EmployeeCheck-Linux-Employee-x86_64.tar.gz
-sudo ./EmployeeCheck-Linux-Employee-x86_64/install.sh
+curl -L -o EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz
+tar -xzf EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz
+sudo ./EmployeeCheck-v0.1.4-Linux-Employee-x86_64/install.sh
 ```
 
 After installing, launch the app from the desktop application menu:
@@ -194,7 +194,7 @@ sudo apt install xdotool xprintidle
 
 Manager/employer computer:
 
-1. Download `EmployeeCheck-macOS-Employer.dmg`.
+1. Download `EmployeeCheck-v0.1.4-macOS-Employer.dmg`.
 2. Open the DMG and launch **Employee Check Employer**.
 3. If macOS blocks the app because it is unsigned, open **System Settings >
    Privacy & Security** and allow it.
@@ -202,7 +202,7 @@ Manager/employer computer:
 
 Employee computer:
 
-1. Download `EmployeeCheck-macOS-Employee.dmg`.
+1. Download `EmployeeCheck-v0.1.4-macOS-Employee.dmg`.
 2. Open the DMG and launch **Employee Check Employee**.
 3. Enter the employee name and employer machine address if auto-discovery fails.
 4. Use **Install Startup** inside the app if you want it to start with the Mac.
@@ -226,8 +226,8 @@ For a first test with one Windows manager PC and one Linux employee machine:
 3. Install the Linux Employee DEB on the Linux machine:
 
 ```bash
-wget https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-Linux-Employee-amd64.deb
-sudo apt install ./EmployeeCheck-Linux-Employee-amd64.deb
+wget https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employee-amd64.deb
+sudo apt install ./EmployeeCheck-v0.1.4-Linux-Employee-amd64.deb
 ```
 
 4. Start **Employee Check Employee** on Linux.
@@ -283,20 +283,20 @@ The included GitHub Actions workflow builds all release files automatically.
 2. Create and push a version tag:
 
 ```bash
-git tag v0.1.0
-git push origin v0.1.0
+git tag vX.Y.Z
+git push origin vX.Y.Z
 ```
 
 The workflow publishes these release assets:
 
-- `EmployeeCheck-Windows-Employer-Setup.exe`
-- `EmployeeCheck-Windows-Employee-Setup.exe`
-- `EmployeeCheck-macOS-Employer.dmg`
-- `EmployeeCheck-macOS-Employee.dmg`
-- `EmployeeCheck-Linux-Employer-amd64.deb`
-- `EmployeeCheck-Linux-Employee-amd64.deb`
-- `EmployeeCheck-Linux-Employer-x86_64.tar.gz`
-- `EmployeeCheck-Linux-Employee-x86_64.tar.gz`
+- `EmployeeCheck-vX.Y.Z-Windows-Employer-Setup.exe`
+- `EmployeeCheck-vX.Y.Z-Windows-Employee-Setup.exe`
+- `EmployeeCheck-vX.Y.Z-macOS-Employer.dmg`
+- `EmployeeCheck-vX.Y.Z-macOS-Employee.dmg`
+- `EmployeeCheck-vX.Y.Z-Linux-Employer-amd64.deb`
+- `EmployeeCheck-vX.Y.Z-Linux-Employee-amd64.deb`
+- `EmployeeCheck-vX.Y.Z-Linux-Employer-x86_64.tar.gz`
+- `EmployeeCheck-vX.Y.Z-Linux-Employee-x86_64.tar.gz`
 
 ## Developer Build
 

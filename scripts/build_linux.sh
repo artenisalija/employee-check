@@ -28,7 +28,7 @@ build_tar() {
   local role_arg="$1"
   local role_name="$2"
   local exe_name="$3"
-  local folder_name="EmployeeCheck-Linux-${role_name}-x86_64"
+  local folder_name="EmployeeCheck-v${VERSION}-Linux-${role_name}-x86_64"
   local package_root="build/${folder_name}"
   local command_name="employee-check-${role_arg}"
   local desktop_id="employee-check-${role_arg}"
@@ -88,7 +88,7 @@ build_deb() {
   local exe_name="$3"
   local package_name="employee-check-${role_arg}"
   local package_root="build/deb-${role_arg}"
-  local output_name="EmployeeCheck-Linux-${role_name}-amd64.deb"
+  local output_name="EmployeeCheck-v${VERSION}-Linux-${role_name}-amd64.deb"
 
   rm -rf "$package_root"
   mkdir -p "$package_root/DEBIAN"

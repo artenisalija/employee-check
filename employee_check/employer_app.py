@@ -9,6 +9,7 @@ from datetime import datetime
 from tkinter import messagebox, simpledialog, ttk
 from typing import Any
 
+from . import __version__
 from .config import EmployerConfig, load_employer_config, save_employer_config
 from .models import (
     STATUSES,
@@ -164,9 +165,9 @@ class EmployerApp:
 
         controls = ttk.LabelFrame(self.root, text="Settings", padding=12)
         controls.grid(row=1, column=0, sticky="ew", padx=16, pady=8)
-        for col in range(8):
+        for col in range(9):
             controls.columnconfigure(col, weight=0)
-        controls.columnconfigure(8, weight=1)
+        controls.columnconfigure(9, weight=1)
         self.report_hour_var = tk.IntVar(value=self.config.report_hour)
         self.retention_var = tk.IntVar(value=self.config.retention_days)
         ttk.Label(controls, text="Report hour").grid(row=0, column=0, sticky="w")
@@ -186,6 +187,9 @@ class EmployerApp:
         )
         ttk.Button(controls, text="Check Updates", command=self._check_updates).grid(
             row=0, column=7, sticky="w", padx=(8, 0)
+        )
+        ttk.Button(controls, text="About", command=self._show_about).grid(
+            row=0, column=8, sticky="w", padx=(8, 0)
         )
 
         body = ttk.PanedWindow(self.root, orient=tk.HORIZONTAL)
@@ -470,6 +474,14 @@ class EmployerApp:
                 open_download_page(result.release_url)
             return
         messagebox.showinfo("Updates", f"Employee Check is up to date.\nVersion: {result.current_version}")
+
+    def _show_about(self) -> None:
+        messagebox.showinfo(
+            "About Employee Check",
+            f"Employee Check Employer\n"
+            f"Version: {__version__}\n"
+            f"Listening port: {self.config.tcp_port}",
+        )
 
     def _hide_window(self) -> None:
         if self.tray_icon:
