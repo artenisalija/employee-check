@@ -9,7 +9,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
-from .models import STATUS_CHECKED_OUT, STATUS_LUNCH, STATUS_MEETING
+from .models import STATUS_CHECKED_IN, STATUS_CHECKED_OUT, STATUS_LUNCH, STATUS_MEETING
 from .paths import reports_dir
 from .storage import EmployerStore
 
@@ -50,6 +50,7 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[tuple[str, str], dict[str, An
         employee_rows.sort(key=lambda item: item["timestamp"])
         active_seconds = 0.0
         idle_seconds = 0.0
+        checked_in_seconds = 0.0
         lunch_seconds = 0.0
         meeting_seconds = 0.0
         checked_out_seconds = 0.0
@@ -65,6 +66,8 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[tuple[str, str], dict[str, An
                 delta = 0.0
             delta = min(max(delta, 0.0), 60.0)
             status = row["manual_status"]
+            if status == STATUS_CHECKED_IN:
+                checked_in_seconds += delta
             if status == STATUS_CHECKED_OUT:
                 checked_out_seconds += delta
             elif status == STATUS_LUNCH:
@@ -81,18 +84,21 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[tuple[str, str], dict[str, An
         grouped[key] = {
             "employee_name": key[0],
             "machine_name": key[1],
-            "first_seen": first_seen,
-            "last_seen": last_seen,
+            "first_seen": employee_rows[0].get("local_timestamp") or first_seen,
+            "last_seen": employee_rows[-1].get("local_timestamp") or last_seen,
             "active_seconds": active_seconds,
             "idle_seconds": idle_seconds,
+            "checked_in_seconds": checked_in_seconds,
             "lunch_seconds": lunch_seconds,
             "meeting_seconds": meeting_seconds,
             "checked_out_seconds": checked_out_seconds,
             "current_status": current["manual_status"],
+            "current_status_elapsed_seconds": float(current.get("status_elapsed_seconds") or 0),
             "current_idle_band": current["idle_band"],
             "current_app": current.get("active_app") or current.get("active_process") or "",
             "current_title": current.get("active_title") or "",
             "current_url": current.get("active_url") or "",
+            "current_machine_time": current.get("local_timestamp") or current.get("timestamp") or "",
             "app_seconds": dict(app_seconds),
         }
     return grouped
@@ -100,7 +106,7 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[tuple[str, str], dict[str, An
 
 def _write_summary(ws, summary: dict[tuple[str, str], dict[str, Any]], report_day: str) -> None:
     ws.append([f"Employee Check Summary - {report_day}"])
-    ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=13)
+    ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=16)
     ws["A1"].font = Font(bold=True, size=14)
     headers = [
         "Employee",
@@ -109,12 +115,15 @@ def _write_summary(ws, summary: dict[tuple[str, str], dict[str, Any]], report_da
         "Last Seen",
         "Active",
         "Idle",
+        "Checked In Status",
         "Lunch",
         "Meeting",
         "Checked Out",
         "Current Status",
+        "Current Status Time",
         "Current Idle Band",
         "Current App",
+        "Current Machine Time",
         "Current Title / URL",
     ]
     ws.append(headers)
@@ -129,12 +138,15 @@ def _write_summary(ws, summary: dict[tuple[str, str], dict[str, Any]], report_da
                 item["last_seen"],
                 _format_seconds(item["active_seconds"]),
                 _format_seconds(item["idle_seconds"]),
+                _format_seconds(item["checked_in_seconds"]),
                 _format_seconds(item["lunch_seconds"]),
                 _format_seconds(item["meeting_seconds"]),
                 _format_seconds(item["checked_out_seconds"]),
                 item["current_status"],
+                _format_seconds(item["current_status_elapsed_seconds"]),
                 item["current_idle_band"],
                 item["current_app"],
+                item["current_machine_time"],
                 title_or_url,
             ]
         )
@@ -153,9 +165,14 @@ def _write_apps(ws, summary: dict[tuple[str, str], dict[str, Any]]) -> None:
 def _write_raw(ws, rows: list[dict[str, Any]]) -> None:
     headers = [
         "Timestamp",
+        "Machine Local Timestamp",
         "Employee",
         "Machine",
         "Manual Status",
+        "Status Started At",
+        "Status Elapsed Seconds",
+        "Status Totals JSON",
+        "Status Totals Day",
         "Idle Seconds",
         "Idle Band",
         "Active App",
@@ -170,9 +187,14 @@ def _write_raw(ws, rows: list[dict[str, Any]]) -> None:
         ws.append(
             [
                 row["timestamp"],
+                row.get("local_timestamp") or "",
                 row["employee_name"],
                 row["machine_name"],
                 row["manual_status"],
+                row.get("status_started_at") or "",
+                row.get("status_elapsed_seconds") or 0,
+                row.get("status_totals_json") or "{}",
+                row.get("status_totals_day") or "",
                 row["idle_seconds"],
                 row["idle_band"],
                 row.get("active_app") or "",
@@ -218,4 +240,3 @@ def _autosize(ws) -> None:
             length = max(length, min(len(value), 80))
             cell.alignment = Alignment(vertical="top", wrap_text=True)
         ws.column_dimensions[letter].width = max(12, min(length + 2, 80))
-

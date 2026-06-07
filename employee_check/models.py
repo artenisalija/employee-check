@@ -9,6 +9,7 @@ STATUS_CHECKED_IN = "checked_in"
 STATUS_CHECKED_OUT = "checked_out"
 STATUS_LUNCH = "lunch"
 STATUS_MEETING = "meeting"
+STATUSES = [STATUS_CHECKED_IN, STATUS_CHECKED_OUT, STATUS_LUNCH, STATUS_MEETING]
 
 IDLE_ACTIVE = "active"
 IDLE_YELLOW = "yellow"
@@ -18,6 +19,10 @@ IDLE_RED = "red"
 
 def now_utc_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+
+
+def now_local_iso() -> str:
+    return datetime.now().astimezone().replace(microsecond=0).isoformat()
 
 
 def idle_band(idle_seconds: float) -> str:
@@ -52,6 +57,12 @@ class EmployeeSnapshot:
     active_window: ActiveWindow = field(default_factory=ActiveWindow)
     open_apps: list[str] = field(default_factory=list)
     timestamp: str = field(default_factory=now_utc_iso)
+    local_timestamp: str = field(default_factory=now_local_iso)
+    status_started_at: str = ""
+    status_started_at_utc: str = ""
+    status_elapsed_seconds: float = 0
+    status_totals_seconds: dict[str, float] = field(default_factory=dict)
+    status_totals_day: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         data = asdict(self)
@@ -76,6 +87,15 @@ class EmployeeSnapshot:
             ),
             open_apps=list(data.get("open_apps") or []),
             timestamp=str(data.get("timestamp") or now_utc_iso()),
+            local_timestamp=str(data.get("local_timestamp") or now_local_iso()),
+            status_started_at=str(data.get("status_started_at") or ""),
+            status_started_at_utc=str(data.get("status_started_at_utc") or ""),
+            status_elapsed_seconds=float(data.get("status_elapsed_seconds", 0) or 0),
+            status_totals_seconds={
+                str(key): float(value or 0)
+                for key, value in (data.get("status_totals_seconds") or {}).items()
+            },
+            status_totals_day=str(data.get("status_totals_day") or ""),
         )
 
 
@@ -86,4 +106,3 @@ class WireMessage:
 
     def to_dict(self) -> dict[str, Any]:
         return {"type": self.type, "payload": self.payload}
-

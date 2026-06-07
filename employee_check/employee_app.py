@@ -4,10 +4,18 @@ import queue
 import threading
 import time
 import tkinter as tk
+from datetime import datetime, timezone
 from tkinter import messagebox, simpledialog, ttk
 
 from .config import EmployeeConfig, load_employee_config, save_employee_config
-from .models import STATUS_CHECKED_IN, STATUS_CHECKED_OUT, STATUS_LUNCH, STATUS_MEETING, WireMessage
+from .models import (
+    STATUSES,
+    STATUS_CHECKED_IN,
+    STATUS_CHECKED_OUT,
+    STATUS_LUNCH,
+    STATUS_MEETING,
+    WireMessage,
+)
 from .monitor import collect_snapshot
 from .net import discover_server, send_json
 from .startup import install_startup
@@ -41,10 +49,16 @@ class EmployeeApp:
     def __init__(self) -> None:
         self.root = tk.Tk()
         self.root.title("Employee Check")
-        self.root.geometry("520x420")
-        self.root.minsize(460, 360)
+        self.root.geometry("560x560")
+        self.root.minsize(500, 460)
         self.config = load_employee_config()
         self.manual_status = STATUS_CHECKED_IN
+        self.status_lock = threading.Lock()
+        self.status_started_monotonic = time.monotonic()
+        self.status_started_local = _now_local_iso()
+        self.status_started_utc = _now_utc_iso()
+        self.status_totals_day = _local_day()
+        self.status_totals_seconds = {status: 0.0 for status in STATUSES}
         self.events: queue.Queue[tuple[str, object]] = queue.Queue()
         self.stop_event = threading.Event()
         self.last_snapshot = None
@@ -63,7 +77,7 @@ class EmployeeApp:
 
     def _build_ui(self) -> None:
         self.root.columnconfigure(0, weight=1)
-        self.root.rowconfigure(4, weight=1)
+        self.root.rowconfigure(5, weight=1)
 
         header = ttk.Frame(self.root, padding=(16, 14, 16, 8))
         header.grid(row=0, column=0, sticky="ew")
@@ -91,8 +105,31 @@ class EmployeeApp:
             row=1, column=0, columnspan=4, sticky="w", pady=(10, 0)
         )
 
+        time_frame = ttk.LabelFrame(self.root, text="Status Time", padding=12)
+        time_frame.grid(row=2, column=0, sticky="ew", padx=16, pady=8)
+        for col in range(4):
+            time_frame.columnconfigure(col, weight=1)
+        self.status_elapsed_var = tk.StringVar(value="Current: 0.0 min")
+        self.machine_time_var = tk.StringVar(value="Machine time: unknown")
+        ttk.Label(time_frame, textvariable=self.status_elapsed_var, font=("Segoe UI", 10, "bold")).grid(
+            row=0, column=0, columnspan=2, sticky="w"
+        )
+        ttk.Label(time_frame, textvariable=self.machine_time_var).grid(row=0, column=2, columnspan=2, sticky="e")
+        self.status_total_vars = {
+            status: tk.StringVar(value=f"{STATUS_LABELS[status]}: 0.0 min")
+            for status in STATUSES
+        }
+        for index, status in enumerate(STATUSES):
+            ttk.Label(time_frame, textvariable=self.status_total_vars[status]).grid(
+                row=1 + index // 2,
+                column=(index % 2) * 2,
+                columnspan=2,
+                sticky="w",
+                pady=(6, 0),
+            )
+
         connection_frame = ttk.Frame(self.root, padding=(16, 0, 16, 0))
-        connection_frame.grid(row=2, column=0, sticky="ew")
+        connection_frame.grid(row=3, column=0, sticky="ew")
         connection_frame.columnconfigure(1, weight=1)
         ttk.Label(connection_frame, text="Employer").grid(row=0, column=0, sticky="w")
         self.server_var = tk.StringVar(value="")
@@ -100,7 +137,7 @@ class EmployeeApp:
         ttk.Button(connection_frame, text="Change", command=self._change_server).grid(row=0, column=2, sticky="e")
 
         live_frame = ttk.LabelFrame(self.root, text="Live", padding=12)
-        live_frame.grid(row=3, column=0, sticky="ew", padx=16, pady=8)
+        live_frame.grid(row=4, column=0, sticky="ew", padx=16, pady=8)
         live_frame.columnconfigure(1, weight=1)
         self.idle_var = tk.StringVar(value="Idle: unknown")
         self.active_var = tk.StringVar(value="Active app: unknown")
@@ -121,7 +158,7 @@ class EmployeeApp:
         )
 
         apps_frame = ttk.LabelFrame(self.root, text="Open Apps", padding=12)
-        apps_frame.grid(row=4, column=0, sticky="nsew", padx=16, pady=(8, 16))
+        apps_frame.grid(row=5, column=0, sticky="nsew", padx=16, pady=(8, 16))
         apps_frame.rowconfigure(0, weight=1)
         apps_frame.columnconfigure(0, weight=1)
         self.apps_list = tk.Listbox(apps_frame, height=6)
@@ -131,7 +168,7 @@ class EmployeeApp:
         self.apps_list.configure(yscrollcommand=scrollbar.set)
 
         footer = ttk.Frame(self.root, padding=(16, 0, 16, 12))
-        footer.grid(row=5, column=0, sticky="ew")
+        footer.grid(row=6, column=0, sticky="ew")
         ttk.Button(footer, text="Install Startup", command=self._install_startup).grid(row=0, column=0, sticky="w")
         ttk.Button(footer, text="Show Window", command=self._show_window).grid(row=0, column=1, sticky="w", padx=(8, 0))
         ttk.Button(footer, text="Check Updates", command=self._check_updates).grid(row=0, column=2, sticky="w", padx=(8, 0))
@@ -171,7 +208,15 @@ class EmployeeApp:
         self.server_var.set(f"{host}:{self.config.server_port} - {self.connection_state}")
 
     def _set_status(self, status: str) -> None:
-        self.manual_status = status
+        with self.status_lock:
+            self._rollover_status_day_locked()
+            now = time.monotonic()
+            previous_elapsed = max(0.0, now - self.status_started_monotonic)
+            self.status_totals_seconds[self.manual_status] += previous_elapsed
+            self.manual_status = status
+            self.status_started_monotonic = now
+            self.status_started_local = _now_local_iso()
+            self.status_started_utc = _now_utc_iso()
         self.status_var.set(STATUS_LABELS.get(status, status))
 
     def _change_server(self) -> None:
@@ -218,10 +263,16 @@ class EmployeeApp:
     def _worker_loop(self) -> None:
         while not self.stop_event.is_set():
             try:
+                timing = self._status_timing_snapshot()
                 snapshot = collect_snapshot(
                     self.config.employee_name,
                     self.config.normalized_machine_name(),
-                    self.manual_status,
+                    timing["manual_status"],
+                    status_started_at=timing["status_started_at"],
+                    status_started_at_utc=timing["status_started_at_utc"],
+                    status_elapsed_seconds=timing["status_elapsed_seconds"],
+                    status_totals_seconds=timing["status_totals_seconds"],
+                    status_totals_day=timing["status_totals_day"],
                 )
                 self.last_snapshot = snapshot
                 response = {}
@@ -240,6 +291,31 @@ class EmployeeApp:
                 self.events.put(("connection", self.connection_state))
             time.sleep(max(2, self.config.sample_seconds))
 
+    def _status_timing_snapshot(self) -> dict[str, object]:
+        with self.status_lock:
+            self._rollover_status_day_locked()
+            elapsed = max(0.0, time.monotonic() - self.status_started_monotonic)
+            totals = {status: float(self.status_totals_seconds.get(status, 0.0)) for status in STATUSES}
+            totals[self.manual_status] = totals.get(self.manual_status, 0.0) + elapsed
+            return {
+                "manual_status": self.manual_status,
+                "status_started_at": self.status_started_local,
+                "status_started_at_utc": self.status_started_utc,
+                "status_elapsed_seconds": elapsed,
+                "status_totals_seconds": totals,
+                "status_totals_day": self.status_totals_day,
+            }
+
+    def _rollover_status_day_locked(self) -> None:
+        today = _local_day()
+        if today == self.status_totals_day:
+            return
+        self.status_totals_day = today
+        self.status_totals_seconds = {status: 0.0 for status in STATUSES}
+        self.status_started_monotonic = time.monotonic()
+        self.status_started_local = _now_local_iso()
+        self.status_started_utc = _now_utc_iso()
+
     def _drain_events(self) -> None:
         while True:
             try:
@@ -256,6 +332,18 @@ class EmployeeApp:
 
     def _render_snapshot(self, snapshot) -> None:
         self._refresh_identity_labels()
+        self.status_var.set(
+            f"{STATUS_LABELS.get(snapshot.manual_status, snapshot.manual_status)} since "
+            f"{_format_machine_time(snapshot.status_started_at)}"
+        )
+        self.status_elapsed_var.set(
+            f"Current: {_format_minutes(snapshot.status_elapsed_seconds)} "
+            f"({_format_idle(snapshot.status_elapsed_seconds)})"
+        )
+        self.machine_time_var.set(f"Machine time: {_format_machine_time(snapshot.local_timestamp)}")
+        for status in STATUSES:
+            total = snapshot.status_totals_seconds.get(status, 0.0)
+            self.status_total_vars[status].set(f"{STATUS_LABELS[status]}: {_format_minutes(total)}")
         idle_text = _format_idle(snapshot.idle_seconds)
         self.idle_var.set(f"Idle: {idle_text} ({snapshot.idle_band})")
         self.idle_badge.configure(
@@ -298,6 +386,31 @@ def _format_idle(seconds: float) -> str:
     if minutes:
         return f"{minutes}m {secs}s"
     return f"{secs}s"
+
+
+def _format_minutes(seconds: float) -> str:
+    return f"{max(0.0, seconds) / 60.0:.1f} min"
+
+
+def _format_machine_time(value: str) -> str:
+    if not value:
+        return "unknown"
+    try:
+        return datetime.fromisoformat(value).strftime("%Y-%m-%d %H:%M:%S")
+    except ValueError:
+        return value
+
+
+def _now_local_iso() -> str:
+    return datetime.now().astimezone().replace(microsecond=0).isoformat()
+
+
+def _now_utc_iso() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+
+
+def _local_day() -> str:
+    return datetime.now().astimezone().date().isoformat()
 
 
 def run_employee_app() -> None:

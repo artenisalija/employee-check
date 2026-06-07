@@ -10,7 +10,14 @@ from tkinter import messagebox, simpledialog, ttk
 from typing import Any
 
 from .config import EmployerConfig, load_employer_config, save_employer_config
-from .models import EmployeeSnapshot
+from .models import (
+    STATUSES,
+    STATUS_CHECKED_IN,
+    STATUS_CHECKED_OUT,
+    STATUS_LUNCH,
+    STATUS_MEETING,
+    EmployeeSnapshot,
+)
 from .net import DiscoveryResponder, JsonTcpServer
 from .paths import config_path, employer_db_path, reports_dir
 from .reporting import generate_daily_report
@@ -32,6 +39,13 @@ IDLE_BADGE_COLORS = {
     "yellow": ("#f6e05e", "#1a202c"),
     "orange": ("#dd6b20", "#1a202c"),
     "red": ("#c53030", "#ffffff"),
+}
+
+STATUS_LABELS = {
+    STATUS_CHECKED_IN: "Checked In",
+    STATUS_CHECKED_OUT: "Checked Out",
+    STATUS_LUNCH: "Lunch",
+    STATUS_MEETING: "Meeting",
 }
 
 
@@ -69,10 +83,20 @@ class EmployerApp:
                 open_apps = json.loads(row_data.get("open_apps_json") or "[]")
             except json.JSONDecodeError:
                 open_apps = []
+            try:
+                status_totals = json.loads(row_data.get("status_totals_json") or "{}")
+            except json.JSONDecodeError:
+                status_totals = {}
             self.snapshots_by_machine[row_data["machine_name"]] = {
                 "employee_name": row_data["employee_name"],
                 "machine_name": row_data["machine_name"],
                 "manual_status": row_data["manual_status"],
+                "local_timestamp": row_data.get("local_timestamp") or row_data["timestamp"],
+                "status_started_at": row_data.get("status_started_at") or "",
+                "status_started_at_utc": row_data.get("status_started_at_utc") or "",
+                "status_elapsed_seconds": row_data.get("status_elapsed_seconds") or 0,
+                "status_totals_seconds": status_totals,
+                "status_totals_day": row_data.get("status_totals_day") or "",
                 "idle_seconds": row_data["idle_seconds"],
                 "idle_band": row_data["idle_band"],
                 "active_window": {
@@ -170,25 +194,27 @@ class EmployerApp:
         list_frame = ttk.Frame(body)
         list_frame.rowconfigure(0, weight=1)
         list_frame.columnconfigure(0, weight=1)
-        columns = ("employee", "machine", "status", "idle", "app", "title", "last_seen")
+        columns = ("employee", "machine", "status", "status_time", "idle", "app", "machine_time", "title")
         self.tree = ttk.Treeview(list_frame, columns=columns, show="headings", selectmode="browse")
         headings = {
             "employee": "Employee",
             "machine": "Machine",
             "status": "Status",
+            "status_time": "Status Time",
             "idle": "Idle",
             "app": "Active App",
+            "machine_time": "Machine Time",
             "title": "Title / URL",
-            "last_seen": "Last Seen",
         }
         widths = {
             "employee": 130,
             "machine": 130,
             "status": 100,
+            "status_time": 120,
             "idle": 90,
             "app": 130,
-            "title": 320,
-            "last_seen": 150,
+            "machine_time": 150,
+            "title": 280,
         }
         for column in columns:
             self.tree.heading(column, text=headings[column])
@@ -205,27 +231,31 @@ class EmployerApp:
         body.add(list_frame, weight=3)
 
         detail_frame = ttk.LabelFrame(body, text="Employee Detail", padding=12)
-        detail_frame.rowconfigure(8, weight=1)
+        detail_frame.rowconfigure(11, weight=1)
         detail_frame.columnconfigure(1, weight=1)
         self.detail_vars = {name: tk.StringVar(value="") for name in [
             "employee",
             "machine",
             "status",
+            "status_time",
+            "status_started",
             "idle",
+            "machine_time",
             "active_app",
             "active_title",
             "active_url",
-            "last_seen",
         ]}
         labels = [
             ("Employee", "employee"),
             ("Machine", "machine"),
             ("Status", "status"),
+            ("Status Time", "status_time"),
+            ("Status Started", "status_started"),
             ("Idle", "idle"),
+            ("Machine Time", "machine_time"),
             ("Active App", "active_app"),
             ("Title", "active_title"),
             ("URL", "active_url"),
-            ("Last Seen", "last_seen"),
         ]
         for row, (label, key) in enumerate(labels):
             ttk.Label(detail_frame, text=label).grid(row=row, column=0, sticky="nw", pady=3)
@@ -244,9 +274,16 @@ class EmployerApp:
                 ttk.Label(detail_frame, textvariable=self.detail_vars[key], wraplength=320).grid(
                     row=row, column=1, sticky="nw", padx=(10, 0), pady=3
                 )
-        ttk.Label(detail_frame, text="Open Apps").grid(row=8, column=0, sticky="nw", pady=(10, 0))
+        ttk.Label(detail_frame, text="Status Minutes").grid(row=len(labels), column=0, sticky="nw", pady=(10, 0))
+        status_box_frame = ttk.Frame(detail_frame)
+        status_box_frame.grid(row=len(labels), column=1, sticky="ew", padx=(10, 0), pady=(10, 0))
+        status_box_frame.columnconfigure(0, weight=1)
+        self.detail_status_totals = tk.Listbox(status_box_frame, height=4)
+        self.detail_status_totals.grid(row=0, column=0, sticky="ew")
+
+        ttk.Label(detail_frame, text="Open Apps").grid(row=len(labels) + 1, column=0, sticky="nw", pady=(10, 0))
         apps_box_frame = ttk.Frame(detail_frame)
-        apps_box_frame.grid(row=8, column=1, sticky="nsew", padx=(10, 0), pady=(10, 0))
+        apps_box_frame.grid(row=len(labels) + 1, column=1, sticky="nsew", padx=(10, 0), pady=(10, 0))
         apps_box_frame.rowconfigure(0, weight=1)
         apps_box_frame.columnconfigure(0, weight=1)
         self.detail_apps = tk.Listbox(apps_box_frame)
@@ -297,14 +334,17 @@ class EmployerApp:
         ):
             active = snapshot.get("active_window") or {}
             title_or_url = active.get("url") or active.get("title") or ""
+            status_elapsed = float(snapshot.get("status_elapsed_seconds", 0) or 0)
+            status = snapshot.get("manual_status", "")
             values = (
                 snapshot.get("employee_name", ""),
                 snapshot.get("machine_name", ""),
-                snapshot.get("manual_status", ""),
+                STATUS_LABELS.get(status, status),
+                f"{_format_minutes(status_elapsed)} / {_format_idle(status_elapsed)}",
                 f"{_format_idle(float(snapshot.get('idle_seconds', 0)))} / {snapshot.get('idle_band', '')}",
                 active.get("app_name") or active.get("process_name") or "",
+                _format_machine_time(snapshot.get("local_timestamp") or snapshot.get("timestamp", "")),
                 title_or_url,
-                snapshot.get("timestamp", ""),
             )
             band = snapshot.get("idle_band", "active")
             if machine in existing:
@@ -326,18 +366,29 @@ class EmployerApp:
 
     def _render_detail(self, snapshot: dict[str, Any]) -> None:
         active = snapshot.get("active_window") or {}
+        status = snapshot.get("manual_status", "")
+        status_elapsed = float(snapshot.get("status_elapsed_seconds", 0) or 0)
         self.detail_vars["employee"].set(snapshot.get("employee_name", ""))
         self.detail_vars["machine"].set(snapshot.get("machine_name", ""))
-        self.detail_vars["status"].set(snapshot.get("manual_status", ""))
+        self.detail_vars["status"].set(STATUS_LABELS.get(status, status))
+        self.detail_vars["status_time"].set(f"{_format_minutes(status_elapsed)} / {_format_idle(status_elapsed)}")
+        self.detail_vars["status_started"].set(_format_machine_time(snapshot.get("status_started_at") or ""))
         self.detail_vars["idle"].set(
             f"{_format_idle(float(snapshot.get('idle_seconds', 0)))} / {snapshot.get('idle_band', '')}"
         )
         badge_bg, badge_fg = IDLE_BADGE_COLORS.get(snapshot.get("idle_band", "active"), IDLE_BADGE_COLORS["active"])
         self.detail_idle_badge.configure(bg=badge_bg, fg=badge_fg)
+        self.detail_vars["machine_time"].set(_format_machine_time(snapshot.get("local_timestamp") or snapshot.get("timestamp", "")))
         self.detail_vars["active_app"].set(active.get("app_name") or active.get("process_name") or "")
         self.detail_vars["active_title"].set(active.get("title") or "")
         self.detail_vars["active_url"].set(active.get("url") or "")
-        self.detail_vars["last_seen"].set(snapshot.get("timestamp", ""))
+        self.detail_status_totals.delete(0, tk.END)
+        totals = _status_totals_from_snapshot(snapshot)
+        for total_status in STATUSES:
+            self.detail_status_totals.insert(
+                tk.END,
+                f"{STATUS_LABELS[total_status]}: {_format_minutes(totals.get(total_status, 0.0))}",
+            )
         self.detail_apps.delete(0, tk.END)
         for app in snapshot.get("open_apps") or []:
             self.detail_apps.insert(tk.END, app)
@@ -459,6 +510,29 @@ def _format_idle(seconds: float) -> str:
     if minutes:
         return f"{minutes}m {secs}s"
     return f"{secs}s"
+
+
+def _format_minutes(seconds: float) -> str:
+    return f"{max(0.0, seconds) / 60.0:.1f} min"
+
+
+def _format_machine_time(value: str) -> str:
+    if not value:
+        return "unknown"
+    try:
+        return datetime.fromisoformat(value).strftime("%Y-%m-%d %H:%M:%S")
+    except ValueError:
+        return value
+
+
+def _status_totals_from_snapshot(snapshot: dict[str, Any]) -> dict[str, float]:
+    totals = snapshot.get("status_totals_seconds") or {}
+    if isinstance(totals, str):
+        try:
+            totals = json.loads(totals)
+        except json.JSONDecodeError:
+            totals = {}
+    return {str(status): float(seconds or 0) for status, seconds in dict(totals).items()}
 
 
 def run_employer_app() -> None:

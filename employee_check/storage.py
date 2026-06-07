@@ -46,7 +46,13 @@ class EmployerStore:
                     machine_name TEXT NOT NULL,
                     employee_name TEXT NOT NULL,
                     timestamp TEXT NOT NULL,
+                    local_timestamp TEXT,
                     manual_status TEXT NOT NULL,
+                    status_started_at TEXT,
+                    status_started_at_utc TEXT,
+                    status_elapsed_seconds REAL DEFAULT 0,
+                    status_totals_json TEXT DEFAULT '{}',
+                    status_totals_day TEXT,
                     idle_seconds REAL NOT NULL,
                     idle_band TEXT NOT NULL,
                     active_app TEXT,
@@ -57,8 +63,19 @@ class EmployerStore:
                 )
                 """
             )
+            self._ensure_column(conn, "snapshots", "local_timestamp", "TEXT")
+            self._ensure_column(conn, "snapshots", "status_started_at", "TEXT")
+            self._ensure_column(conn, "snapshots", "status_started_at_utc", "TEXT")
+            self._ensure_column(conn, "snapshots", "status_elapsed_seconds", "REAL DEFAULT 0")
+            self._ensure_column(conn, "snapshots", "status_totals_json", "TEXT DEFAULT '{}'")
+            self._ensure_column(conn, "snapshots", "status_totals_day", "TEXT")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_snapshots_machine_time ON snapshots(machine_name, timestamp)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_snapshots_time ON snapshots(timestamp)")
+
+    def _ensure_column(self, conn: sqlite3.Connection, table: str, column: str, definition: str) -> None:
+        columns = {row["name"] for row in conn.execute(f"PRAGMA table_info({table})").fetchall()}
+        if column not in columns:
+            conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {definition}")
 
     def save_snapshot(self, snapshot: EmployeeSnapshot) -> None:
         with self.connect() as conn:
@@ -75,16 +92,24 @@ class EmployerStore:
             conn.execute(
                 """
                 INSERT INTO snapshots(
-                    machine_name, employee_name, timestamp, manual_status, idle_seconds, idle_band,
+                    machine_name, employee_name, timestamp, local_timestamp, manual_status,
+                    status_started_at, status_started_at_utc, status_elapsed_seconds,
+                    status_totals_json, status_totals_day, idle_seconds, idle_band,
                     active_app, active_process, active_title, active_url, open_apps_json
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     snapshot.machine_name,
                     snapshot.employee_name,
                     snapshot.timestamp,
+                    snapshot.local_timestamp,
                     snapshot.manual_status,
+                    snapshot.status_started_at,
+                    snapshot.status_started_at_utc,
+                    snapshot.status_elapsed_seconds,
+                    json.dumps(snapshot.status_totals_seconds, separators=(",", ":")),
+                    snapshot.status_totals_day,
                     snapshot.idle_seconds,
                     snapshot.idle_band,
                     snapshot.active_window.app_name,
@@ -131,4 +156,3 @@ class EmployerStore:
         with self.connect() as conn:
             cursor = conn.execute("DELETE FROM snapshots WHERE timestamp < ?", (cutoff_iso,))
             return cursor.rowcount
-

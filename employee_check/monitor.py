@@ -24,7 +24,16 @@ BROWSER_APPS = {
 }
 
 
-def collect_snapshot(employee_name: str, machine_name: str, manual_status: str) -> EmployeeSnapshot:
+def collect_snapshot(
+    employee_name: str,
+    machine_name: str,
+    manual_status: str,
+    status_started_at: str = "",
+    status_started_at_utc: str = "",
+    status_elapsed_seconds: float = 0,
+    status_totals_seconds: dict[str, float] | None = None,
+    status_totals_day: str = "",
+) -> EmployeeSnapshot:
     active_window = get_active_window()
     idle = idle_seconds(_activity_signature(active_window))
     return EmployeeSnapshot(
@@ -35,6 +44,11 @@ def collect_snapshot(employee_name: str, machine_name: str, manual_status: str) 
         idle_band=idle_band(idle),
         active_window=active_window,
         open_apps=list_open_apps(),
+        status_started_at=status_started_at,
+        status_started_at_utc=status_started_at_utc,
+        status_elapsed_seconds=status_elapsed_seconds,
+        status_totals_seconds=status_totals_seconds or {},
+        status_totals_day=status_totals_day,
     )
 
 
