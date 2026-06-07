@@ -54,6 +54,12 @@ COMMAND_NAME="${command_name}"
 DESKTOP_ID="${desktop_id}"
 
 mkdir -p "\${INSTALL_DIR}"
+pkill -x "\${EXE_NAME}" 2>/dev/null || true
+pkill -f "\${INSTALL_DIR}/\${EXE_NAME}" 2>/dev/null || true
+rm -f "\${INSTALL_DIR}/\${EXE_NAME}"
+rm -f "/usr/local/bin/\${COMMAND_NAME}"
+rm -f "/usr/share/applications/\${DESKTOP_ID}.desktop"
+rm -f "/etc/xdg/autostart/\${DESKTOP_ID}.desktop"
 install -m 755 "\${SOURCE_DIR}/\${EXE_NAME}" "\${INSTALL_DIR}/\${EXE_NAME}"
 ln -sf "\${INSTALL_DIR}/\${EXE_NAME}" "/usr/local/bin/\${COMMAND_NAME}"
 
@@ -102,6 +108,30 @@ Architecture: amd64
 Maintainer: Employee Check
 Description: Employee Check ${role_name} desktop app
 EOF
+
+  cat > "$package_root/DEBIAN/preinst" <<EOF
+#!/usr/bin/env sh
+set -e
+pkill -x "${exe_name}" 2>/dev/null || true
+pkill -f "/opt/employee-check/${exe_name}" 2>/dev/null || true
+rm -f "/opt/employee-check/${exe_name}"
+rm -f "/usr/local/bin/employee-check-${role_arg}"
+rm -f "/usr/share/applications/employee-check-${role_arg}.desktop"
+rm -f "/etc/xdg/autostart/employee-check-${role_arg}.desktop"
+exit 0
+EOF
+  chmod 755 "$package_root/DEBIAN/preinst"
+
+  cat > "$package_root/DEBIAN/prerm" <<EOF
+#!/usr/bin/env sh
+set -e
+if [ "\$1" = "remove" ] || [ "\$1" = "deconfigure" ] || [ "\$1" = "upgrade" ]; then
+  pkill -x "${exe_name}" 2>/dev/null || true
+  pkill -f "/opt/employee-check/${exe_name}" 2>/dev/null || true
+fi
+exit 0
+EOF
+  chmod 755 "$package_root/DEBIAN/prerm"
 
   cat > "$package_root/usr/share/applications/employee-check-${role_arg}.desktop" <<EOF
 [Desktop Entry]

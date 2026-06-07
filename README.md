@@ -68,6 +68,14 @@ Employee computer:
 
 The Windows installers add startup entries automatically.
 
+Updating on Windows:
+
+1. Download the newest setup file for the same role.
+2. Right-click it and choose **Run as administrator**.
+3. The setup stops running Employee Check processes, removes the previous
+   install for that role, clears old files from the install folder, and installs
+   the new version.
+
 ### Linux Debian/Ubuntu
 
 Manager/employer computer:
@@ -172,6 +180,9 @@ After installing, launch the app from the desktop application menu:
 - Employee: **Employee Check Employee**
 
 The Linux DEB and tar.gz installers add desktop startup entries automatically.
+When installing an update, the package/install script stops the old role process
+and replaces the old role binary, desktop entry, and startup entry before copying
+the new version.
 Active-window and idle detection work best on X11. On Debian/Ubuntu, install
 these optional tools for better detection:
 
@@ -198,6 +209,13 @@ Employee computer:
 
 macOS may ask for Accessibility or Automation permissions before active-window
 titles or browser URLs are visible.
+
+Updating on macOS:
+
+1. Download the newest DMG for the same role.
+2. Quit the running Employee Check app.
+3. Open the new DMG and launch the app from it, or replace the old app bundle if
+   you copied it locally.
 
 ## Quick Test
 
