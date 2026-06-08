@@ -345,12 +345,12 @@ class EmployerApp:
                 snapshot.get("machine_name", ""),
                 STATUS_LABELS.get(status, status),
                 f"{_format_minutes(status_elapsed)} / {_format_idle(status_elapsed)}",
-                f"{_format_idle(float(snapshot.get('idle_seconds', 0)))} / {snapshot.get('idle_band', '')}",
+                _format_idle_for_snapshot(snapshot),
                 active.get("app_name") or active.get("process_name") or "",
                 _format_machine_time(snapshot.get("local_timestamp") or snapshot.get("timestamp", "")),
                 title_or_url,
             )
-            band = snapshot.get("idle_band", "active")
+            band = _idle_band_for_display(snapshot)
             if machine in existing:
                 self.tree.item(machine, values=values, tags=(band,))
             else:
@@ -377,10 +377,8 @@ class EmployerApp:
         self.detail_vars["status"].set(STATUS_LABELS.get(status, status))
         self.detail_vars["status_time"].set(f"{_format_minutes(status_elapsed)} / {_format_idle(status_elapsed)}")
         self.detail_vars["status_started"].set(_format_machine_time(snapshot.get("status_started_at") or ""))
-        self.detail_vars["idle"].set(
-            f"{_format_idle(float(snapshot.get('idle_seconds', 0)))} / {snapshot.get('idle_band', '')}"
-        )
-        badge_bg, badge_fg = IDLE_BADGE_COLORS.get(snapshot.get("idle_band", "active"), IDLE_BADGE_COLORS["active"])
+        self.detail_vars["idle"].set(_format_idle_for_snapshot(snapshot))
+        badge_bg, badge_fg = IDLE_BADGE_COLORS.get(_idle_band_for_display(snapshot), IDLE_BADGE_COLORS["active"])
         self.detail_idle_badge.configure(bg=badge_bg, fg=badge_fg)
         self.detail_vars["machine_time"].set(_format_machine_time(snapshot.get("local_timestamp") or snapshot.get("timestamp", "")))
         self.detail_vars["active_app"].set(active.get("app_name") or active.get("process_name") or "")
@@ -526,6 +524,20 @@ def _format_idle(seconds: float) -> str:
 
 def _format_minutes(seconds: float) -> str:
     return f"{max(0.0, seconds) / 60.0:.1f} min"
+
+
+def _format_idle_for_snapshot(snapshot: dict[str, Any]) -> str:
+    status = str(snapshot.get("manual_status") or "")
+    if status in {STATUS_LUNCH, STATUS_MEETING}:
+        return f"Paused during {STATUS_LABELS.get(status, status)}"
+    return f"{_format_idle(float(snapshot.get('idle_seconds', 0)))} / {snapshot.get('idle_band', '')}"
+
+
+def _idle_band_for_display(snapshot: dict[str, Any]) -> str:
+    status = str(snapshot.get("manual_status") or "")
+    if status in {STATUS_LUNCH, STATUS_MEETING}:
+        return "active"
+    return str(snapshot.get("idle_band") or "active")
 
 
 def _format_machine_time(value: str) -> str:

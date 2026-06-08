@@ -14,22 +14,22 @@ https://github.com/artenisalija/employee-check/releases/latest
 
 ## Downloads
 
-Current documented version: `v0.1.5`
+Current documented version: `v0.1.6`
 
 | Platform | Employer | Employee |
 | --- | --- | --- |
-| Windows | [Employer setup](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.5-Windows-Employer-Setup.exe) | [Employee setup](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.5-Windows-Employee-Setup.exe) |
-| macOS | [Employer DMG](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.5-macOS-Employer.dmg) | [Employee DMG](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.5-macOS-Employee.dmg) |
-| Debian/Ubuntu | [Employer DEB](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.5-Linux-Employer-amd64.deb) | [Employee DEB](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.5-Linux-Employee-amd64.deb) |
-| Other Linux x86_64 | [Employer tar.gz](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.5-Linux-Employer-x86_64.tar.gz) | [Employee tar.gz](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.5-Linux-Employee-x86_64.tar.gz) |
+| Windows | [Employer setup](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.6-Windows-Employer-Setup.exe) | [Employee setup](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.6-Windows-Employee-Setup.exe) |
+| macOS | [Employer DMG](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.6-macOS-Employer.dmg) | [Employee DMG](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.6-macOS-Employee.dmg) |
+| Debian/Ubuntu | [Employer DEB](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.6-Linux-Employer-amd64.deb) | [Employee DEB](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.6-Linux-Employee-amd64.deb) |
+| Other Linux x86_64 | [Employer tar.gz](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.6-Linux-Employer-x86_64.tar.gz) | [Employee tar.gz](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.6-Linux-Employee-x86_64.tar.gz) |
 
 Full uninstall files:
 
 | Platform | Full wipe file |
 | --- | --- |
-| Windows | [EmployeeCheck-v0.1.5-Windows-Full-Uninstall.ps1](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.5-Windows-Full-Uninstall.ps1) |
-| macOS | [EmployeeCheck-v0.1.5-macOS-Full-Uninstall.sh](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.5-macOS-Full-Uninstall.sh) |
-| Linux | [EmployeeCheck-v0.1.5-Linux-Full-Uninstall.sh](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.5-Linux-Full-Uninstall.sh) |
+| Windows | [EmployeeCheck-v0.1.6-Windows-Full-Uninstall.ps1](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.6-Windows-Full-Uninstall.ps1) |
+| macOS | [EmployeeCheck-v0.1.6-macOS-Full-Uninstall.sh](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.6-macOS-Full-Uninstall.sh) |
+| Linux | [EmployeeCheck-v0.1.6-Linux-Full-Uninstall.sh](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.6-Linux-Full-Uninstall.sh) |
 
 ## Quick Start
 
@@ -69,7 +69,7 @@ titles or browser URLs are visible.
 Set `ROLE` to `Employer` or `Employee`:
 
 ```bash
-VERSION=0.1.5
+VERSION=0.1.6
 ROLE=Employee
 PACKAGE="EmployeeCheck-v${VERSION}-Linux-${ROLE}-amd64.deb"
 wget "https://github.com/artenisalija/employee-check/releases/latest/download/${PACKAGE}"
@@ -85,7 +85,7 @@ sudo apt install xdotool xprintidle
 ### Fedora/RHEL/Rocky Linux
 
 ```bash
-VERSION=0.1.5
+VERSION=0.1.6
 ROLE=Employee
 PACKAGE="EmployeeCheck-v${VERSION}-Linux-${ROLE}-x86_64.tar.gz"
 FOLDER="EmployeeCheck-v${VERSION}-Linux-${ROLE}-x86_64"
@@ -98,7 +98,7 @@ sudo dnf install xdotool xprintidle
 ### openSUSE
 
 ```bash
-VERSION=0.1.5
+VERSION=0.1.6
 ROLE=Employee
 PACKAGE="EmployeeCheck-v${VERSION}-Linux-${ROLE}-x86_64.tar.gz"
 FOLDER="EmployeeCheck-v${VERSION}-Linux-${ROLE}-x86_64"
@@ -111,7 +111,7 @@ sudo zypper install xdotool xprintidle
 ### Arch Linux/Manjaro
 
 ```bash
-VERSION=0.1.5
+VERSION=0.1.6
 ROLE=Employee
 PACKAGE="EmployeeCheck-v${VERSION}-Linux-${ROLE}-x86_64.tar.gz"
 FOLDER="EmployeeCheck-v${VERSION}-Linux-${ROLE}-x86_64"
@@ -124,7 +124,7 @@ sudo pacman -S xdotool xprintidle
 ### Generic Linux x86_64
 
 ```bash
-VERSION=0.1.5
+VERSION=0.1.6
 ROLE=Employee
 PACKAGE="EmployeeCheck-v${VERSION}-Linux-${ROLE}-x86_64.tar.gz"
 FOLDER="EmployeeCheck-v${VERSION}-Linux-${ROLE}-x86_64"
@@ -169,7 +169,7 @@ reports from local user profiles.
 Download the Windows full uninstall file from the table above, then run:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\EmployeeCheck-v0.1.5-Windows-Full-Uninstall.ps1
+powershell -ExecutionPolicy Bypass -File .\EmployeeCheck-v0.1.6-Windows-Full-Uninstall.ps1
 ```
 
 The script relaunches as administrator if needed.
@@ -177,7 +177,7 @@ The script relaunches as administrator if needed.
 ### macOS Full Wipe
 
 ```bash
-VERSION=0.1.5
+VERSION=0.1.6
 SCRIPT="EmployeeCheck-v${VERSION}-macOS-Full-Uninstall.sh"
 curl -L -o "${SCRIPT}" "https://github.com/artenisalija/employee-check/releases/latest/download/${SCRIPT}"
 sudo bash "${SCRIPT}"
@@ -188,7 +188,7 @@ sudo bash "${SCRIPT}"
 Debian/Ubuntu:
 
 ```bash
-VERSION=0.1.5
+VERSION=0.1.6
 SCRIPT="EmployeeCheck-v${VERSION}-Linux-Full-Uninstall.sh"
 curl -L -o "${SCRIPT}" "https://github.com/artenisalija/employee-check/releases/latest/download/${SCRIPT}"
 sudo bash "${SCRIPT}"
@@ -197,7 +197,7 @@ sudo bash "${SCRIPT}"
 Fedora/RHEL/Rocky Linux:
 
 ```bash
-VERSION=0.1.5
+VERSION=0.1.6
 SCRIPT="EmployeeCheck-v${VERSION}-Linux-Full-Uninstall.sh"
 curl -L -o "${SCRIPT}" "https://github.com/artenisalija/employee-check/releases/latest/download/${SCRIPT}"
 sudo bash "${SCRIPT}"
@@ -206,7 +206,7 @@ sudo bash "${SCRIPT}"
 openSUSE:
 
 ```bash
-VERSION=0.1.5
+VERSION=0.1.6
 SCRIPT="EmployeeCheck-v${VERSION}-Linux-Full-Uninstall.sh"
 curl -L -o "${SCRIPT}" "https://github.com/artenisalija/employee-check/releases/latest/download/${SCRIPT}"
 sudo bash "${SCRIPT}"
@@ -215,7 +215,7 @@ sudo bash "${SCRIPT}"
 Arch Linux/Manjaro:
 
 ```bash
-VERSION=0.1.5
+VERSION=0.1.6
 SCRIPT="EmployeeCheck-v${VERSION}-Linux-Full-Uninstall.sh"
 curl -L -o "${SCRIPT}" "https://github.com/artenisalija/employee-check/releases/latest/download/${SCRIPT}"
 sudo bash "${SCRIPT}"
@@ -224,13 +224,13 @@ sudo bash "${SCRIPT}"
 Generic Linux x86_64:
 
 ```bash
-VERSION=0.1.5
+VERSION=0.1.6
 SCRIPT="EmployeeCheck-v${VERSION}-Linux-Full-Uninstall.sh"
 curl -L -o "${SCRIPT}" "https://github.com/artenisalija/employee-check/releases/latest/download/${SCRIPT}"
 sudo bash "${SCRIPT}"
 ```
 
-If version `v0.1.5` or newer is already installed on Linux, you can also run the
+If version `v0.1.6` or newer is already installed on Linux, you can also run the
 role command installed with the package:
 
 ```bash
@@ -248,6 +248,8 @@ Either command wipes both roles from that machine.
 - Idle bands: active under 2 minutes, yellow at 2 minutes, orange at 5 minutes,
   red at 10 minutes.
 - Employee statuses: checked in, checked out, lunch, meeting.
+- Idle tracking pauses during lunch and meeting; reports count those durations
+  as lunch/meeting time instead of idle time.
 - Current status time and per-status minutes.
 - Employer report hour and data-retention settings.
 - Daily Excel summaries per employee.

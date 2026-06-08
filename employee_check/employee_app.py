@@ -17,6 +17,7 @@ from .models import (
     STATUS_MEETING,
     WireMessage,
 )
+from .idle import reset_idle_clock
 from .monitor import collect_snapshot
 from .net import discover_server, send_json
 from .startup import install_startup
@@ -219,6 +220,7 @@ class EmployeeApp:
             self.status_started_monotonic = now
             self.status_started_local = _now_local_iso()
             self.status_started_utc = _now_utc_iso()
+            reset_idle_clock()
         self.status_var.set(STATUS_LABELS.get(status, status))
 
     def _change_server(self) -> None:
@@ -346,8 +348,11 @@ class EmployeeApp:
         for status in STATUSES:
             total = snapshot.status_totals_seconds.get(status, 0.0)
             self.status_total_vars[status].set(f"{STATUS_LABELS[status]}: {_format_minutes(total)}")
-        idle_text = _format_idle(snapshot.idle_seconds)
-        self.idle_var.set(f"Idle: {idle_text} ({snapshot.idle_band})")
+        if _status_pauses_idle(snapshot.manual_status):
+            self.idle_var.set(f"Idle: paused during {STATUS_LABELS.get(snapshot.manual_status, snapshot.manual_status)}")
+        else:
+            idle_text = _format_idle(snapshot.idle_seconds)
+            self.idle_var.set(f"Idle: {idle_text} ({snapshot.idle_band})")
         self.idle_badge.configure(
             bg=IDLE_COLORS.get(snapshot.idle_band, IDLE_COLORS["active"]),
             fg=IDLE_FOREGROUNDS.get(snapshot.idle_band, IDLE_FOREGROUNDS["active"]),
@@ -421,6 +426,10 @@ def _now_utc_iso() -> str:
 
 def _local_day() -> str:
     return datetime.now().astimezone().date().isoformat()
+
+
+def _status_pauses_idle(status: str) -> bool:
+    return status in {STATUS_LUNCH, STATUS_MEETING}
 
 
 def run_employee_app() -> None:

@@ -8,7 +8,7 @@ from pathlib import Path
 import psutil
 
 from .idle import idle_seconds
-from .models import ActiveWindow, EmployeeSnapshot, idle_band
+from .models import ActiveWindow, EmployeeSnapshot, STATUS_LUNCH, STATUS_MEETING, idle_band
 
 
 BROWSER_APPS = {
@@ -35,7 +35,7 @@ def collect_snapshot(
     status_totals_day: str = "",
 ) -> EmployeeSnapshot:
     active_window = get_active_window()
-    idle = idle_seconds(_activity_signature(active_window))
+    idle = 0.0 if _status_pauses_idle(manual_status) else idle_seconds(_activity_signature(active_window))
     return EmployeeSnapshot(
         employee_name=employee_name,
         machine_name=machine_name,
@@ -50,6 +50,10 @@ def collect_snapshot(
         status_totals_seconds=status_totals_seconds or {},
         status_totals_day=status_totals_day,
     )
+
+
+def _status_pauses_idle(status: str) -> bool:
+    return status in {STATUS_LUNCH, STATUS_MEETING}
 
 
 def list_open_apps(limit: int = 250) -> list[str]:

@@ -68,18 +68,18 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[tuple[str, str], dict[str, An
             status = row["manual_status"]
             if status == STATUS_CHECKED_IN:
                 checked_in_seconds += delta
-            if status == STATUS_CHECKED_OUT:
+                if float(row["idle_seconds"] or 0) >= 120:
+                    idle_seconds += delta
+                else:
+                    active_seconds += delta
+                    app = row.get("active_app") or row.get("active_process") or "Unknown"
+                    app_seconds[app] += delta
+            elif status == STATUS_CHECKED_OUT:
                 checked_out_seconds += delta
             elif status == STATUS_LUNCH:
                 lunch_seconds += delta
             elif status == STATUS_MEETING:
                 meeting_seconds += delta
-            elif float(row["idle_seconds"] or 0) >= 120:
-                idle_seconds += delta
-            else:
-                active_seconds += delta
-                app = row.get("active_app") or row.get("active_process") or "Unknown"
-                app_seconds[app] += delta
 
         grouped[key] = {
             "employee_name": key[0],
@@ -94,7 +94,7 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[tuple[str, str], dict[str, An
             "checked_out_seconds": checked_out_seconds,
             "current_status": current["manual_status"],
             "current_status_elapsed_seconds": float(current.get("status_elapsed_seconds") or 0),
-            "current_idle_band": current["idle_band"],
+            "current_idle_band": _current_idle_band(current),
             "current_app": current.get("active_app") or current.get("active_process") or "",
             "current_title": current.get("active_title") or "",
             "current_url": current.get("active_url") or "",
@@ -102,6 +102,14 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[tuple[str, str], dict[str, An
             "app_seconds": dict(app_seconds),
         }
     return grouped
+
+
+def _current_idle_band(row: dict[str, Any]) -> str:
+    if row.get("manual_status") == STATUS_LUNCH:
+        return "paused during lunch"
+    if row.get("manual_status") == STATUS_MEETING:
+        return "paused during meeting"
+    return str(row.get("idle_band") or "")
 
 
 def _write_summary(ws, summary: dict[tuple[str, str], dict[str, Any]], report_day: str) -> None:

@@ -29,6 +29,13 @@ def idle_seconds(activity_signature: str | None = None) -> float:
     return _fallback_idle_seconds(activity_signature)
 
 
+def reset_idle_clock(activity_signature: str | None = None) -> None:
+    global _last_activity_signature, _last_activity_monotonic
+    _last_activity_signature = activity_signature
+    _last_activity_monotonic = time.monotonic()
+    _reset_native_zero_tracker()
+
+
 def _native_idle_seconds() -> float | None:
     system = platform.system()
     if system == "Windows":
