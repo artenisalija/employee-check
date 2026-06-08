@@ -1,7 +1,11 @@
 from __future__ import annotations
 
 import json
+import os
+import platform
 import re
+import shutil
+import subprocess
 import urllib.request
 import webbrowser
 from dataclasses import dataclass
@@ -43,11 +47,50 @@ def check_for_update() -> UpdateResult:
     )
 
 
-def open_download_page(url: str = RELEASES_URL) -> None:
-    webbrowser.open(url)
+def open_download_page(url: str = RELEASES_URL) -> bool:
+    system = platform.system()
+    if system == "Windows":
+        try:
+            os.startfile(url)  # type: ignore[attr-defined]
+            return True
+        except Exception:
+            pass
+
+    for command in _platform_open_commands(system, url):
+        executable = command[0]
+        if not shutil.which(executable):
+            continue
+        try:
+            subprocess.Popen(
+                command,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                start_new_session=True,
+            )
+            return True
+        except Exception:
+            continue
+
+    try:
+        return bool(webbrowser.open(url, new=2))
+    except Exception:
+        return False
+
+
+def _platform_open_commands(system: str, url: str) -> list[list[str]]:
+    if system == "Linux":
+        return [
+            ["xdg-open", url],
+            ["gio", "open", url],
+            ["kde-open5", url],
+            ["kde-open", url],
+            ["gnome-open", url],
+        ]
+    if system == "Darwin":
+        return [["open", url]]
+    return []
 
 
 def _version_tuple(value: str) -> tuple[int, ...]:
     parts = re.findall(r"\d+", value)
     return tuple(int(part) for part in parts) if parts else (0,)
-

@@ -379,9 +379,18 @@ class EmployeeApp:
                 "Open the download page?",
             )
             if should_open:
-                open_download_page(result.release_url)
+                self._open_download_page(result.release_url)
             return
         messagebox.showinfo("Updates", f"Employee Check is up to date.\nVersion: {result.current_version}")
+
+    def _open_download_page(self, url: str) -> None:
+        if open_download_page(url):
+            return
+        messagebox.showinfo(
+            "Updates",
+            "Could not open the browser automatically.\n\n"
+            f"Open this page manually:\n{url}",
+        )
 
     def _show_about(self) -> None:
         messagebox.showinfo(
