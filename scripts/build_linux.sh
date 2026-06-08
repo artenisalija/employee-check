@@ -21,6 +21,10 @@ PY
 rm -rf build dist
 mkdir -p dist
 
+UNINSTALL_RELEASE="dist/EmployeeCheck-v${VERSION}-Linux-Full-Uninstall.sh"
+sed "s/__VERSION__/${VERSION}/g" installer/linux/uninstall_employee_check.sh > "$UNINSTALL_RELEASE"
+chmod 755 "$UNINSTALL_RELEASE"
+
 .venv/bin/pyinstaller --noconfirm --clean --windowed --name EmployeeCheckEmployer --onefile run_employee_check_employer.py
 .venv/bin/pyinstaller --noconfirm --clean --windowed --name EmployeeCheckEmployee --onefile run_employee_check_employee.py
 
@@ -36,7 +40,9 @@ build_tar() {
   rm -rf "$package_root"
   mkdir -p "$package_root"
   cp "dist/${exe_name}" "$package_root/${exe_name}"
+  cp "$UNINSTALL_RELEASE" "$package_root/uninstall.sh"
   chmod 755 "$package_root/${exe_name}"
+  chmod 755 "$package_root/uninstall.sh"
 
   cat > "$package_root/install.sh" <<EOF
 #!/usr/bin/env bash
@@ -52,16 +58,22 @@ EXE_NAME="${exe_name}"
 ROLE_NAME="${role_name}"
 COMMAND_NAME="${command_name}"
 DESKTOP_ID="${desktop_id}"
+UNINSTALL_SCRIPT="uninstall-${role_arg}.sh"
+UNINSTALL_COMMAND="employee-check-uninstall-${role_arg}"
 
 mkdir -p "\${INSTALL_DIR}"
 pkill -x "\${EXE_NAME}" 2>/dev/null || true
 pkill -f "\${INSTALL_DIR}/\${EXE_NAME}" 2>/dev/null || true
 rm -f "\${INSTALL_DIR}/\${EXE_NAME}"
+rm -f "\${INSTALL_DIR}/\${UNINSTALL_SCRIPT}"
 rm -f "/usr/local/bin/\${COMMAND_NAME}"
+rm -f "/usr/local/bin/\${UNINSTALL_COMMAND}"
 rm -f "/usr/share/applications/\${DESKTOP_ID}.desktop"
 rm -f "/etc/xdg/autostart/\${DESKTOP_ID}.desktop"
 install -m 755 "\${SOURCE_DIR}/\${EXE_NAME}" "\${INSTALL_DIR}/\${EXE_NAME}"
+install -m 755 "\${SOURCE_DIR}/uninstall.sh" "\${INSTALL_DIR}/\${UNINSTALL_SCRIPT}"
 ln -sf "\${INSTALL_DIR}/\${EXE_NAME}" "/usr/local/bin/\${COMMAND_NAME}"
+ln -sf "\${INSTALL_DIR}/\${UNINSTALL_SCRIPT}" "/usr/local/bin/\${UNINSTALL_COMMAND}"
 
 mkdir -p /usr/share/applications /etc/xdg/autostart
 cat > "/usr/share/applications/\${DESKTOP_ID}.desktop" <<DESKTOP
@@ -76,6 +88,7 @@ DESKTOP
 cp "/usr/share/applications/\${DESKTOP_ID}.desktop" "/etc/xdg/autostart/\${DESKTOP_ID}.desktop"
 echo "Installed Employee Check \${ROLE_NAME}."
 echo "Run it from the application menu or with: \${COMMAND_NAME}"
+echo "Full uninstall command: sudo \${UNINSTALL_COMMAND}"
 EOF
   chmod 755 "$package_root/install.sh"
 
@@ -95,9 +108,14 @@ build_deb() {
   mkdir -p "$package_root/opt/employee-check"
   mkdir -p "$package_root/usr/share/applications"
   mkdir -p "$package_root/etc/xdg/autostart"
+  mkdir -p "$package_root/usr/bin"
 
   cp "dist/${exe_name}" "$package_root/opt/employee-check/${exe_name}"
+  cp "$UNINSTALL_RELEASE" "$package_root/opt/employee-check/uninstall-${role_arg}.sh"
+  cp "$UNINSTALL_RELEASE" "$package_root/usr/bin/employee-check-uninstall-${role_arg}"
   chmod 755 "$package_root/opt/employee-check/${exe_name}"
+  chmod 755 "$package_root/opt/employee-check/uninstall-${role_arg}.sh"
+  chmod 755 "$package_root/usr/bin/employee-check-uninstall-${role_arg}"
 
   cat > "$package_root/DEBIAN/control" <<EOF
 Package: ${package_name}
@@ -115,7 +133,10 @@ set -e
 pkill -x "${exe_name}" 2>/dev/null || true
 pkill -f "/opt/employee-check/${exe_name}" 2>/dev/null || true
 rm -f "/opt/employee-check/${exe_name}"
+rm -f "/opt/employee-check/uninstall-${role_arg}.sh"
 rm -f "/usr/local/bin/employee-check-${role_arg}"
+rm -f "/usr/local/bin/employee-check-uninstall-${role_arg}"
+rm -f "/usr/bin/employee-check-uninstall-${role_arg}"
 rm -f "/usr/share/applications/employee-check-${role_arg}.desktop"
 rm -f "/etc/xdg/autostart/employee-check-${role_arg}.desktop"
 exit 0

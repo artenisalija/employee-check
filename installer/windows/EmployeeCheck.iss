@@ -1,5 +1,5 @@
 #ifndef AppVersion
-#define AppVersion "0.1.4"
+#define AppVersion "0.1.5"
 #endif
 
 #ifndef RoleName
@@ -11,7 +11,7 @@
 #endif
 
 #ifndef OutputBaseFilename
-#define OutputBaseFilename "EmployeeCheck-v0.1.4-Windows-Employee-Setup"
+#define OutputBaseFilename "EmployeeCheck-v0.1.5-Windows-Employee-Setup"
 #endif
 
 [Setup]
@@ -43,6 +43,7 @@ Type: filesandordirs; Name: "{app}"
 
 [Files]
 Source: "..\..\dist\EmployeeCheck.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\dist\installers\EmployeeCheck-v{#AppVersion}-Windows-Full-Uninstall.ps1"; DestDir: "{app}"; DestName: "Full-Uninstall.ps1"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\Employee Check {#RoleName}"; Filename: "{app}\EmployeeCheck.exe"; Parameters: "{#RoleArg}"

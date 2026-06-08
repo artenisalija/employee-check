@@ -1,302 +1,269 @@
 # Employee Check
 
-Employee Check is a cross-platform desktop monitoring app for corporate LANs.
-It has two roles:
+Employee Check is a visible cross-platform desktop monitoring app for corporate
+LANs. It has two roles:
 
-- **Employer**: desktop dashboard, local database, daily Excel reports, LAN server.
-- **Employee**: visible agent with Check In, Check Out, Lunch, and Meeting statuses.
+- **Employer**: manager dashboard, LAN server, local database, daily Excel reports.
+- **Employee**: tray/menu agent with Check In, Check Out, Lunch, and Meeting.
 
-Employee and employer machines do **not** need Python installed. Download the
-installer/package for the correct role from GitHub Releases.
+Employees and managers do **not** need Python installed. Download the installer
+or package for the correct role from GitHub Releases.
 
-The app is intentionally visible to employees. It can be configured to start with
-the machine using normal OS startup mechanisms, but it does not implement stealth
-persistence or prevent administrators from stopping/removing it.
-
-## Download
-
-Latest release page:
+Latest release:
 https://github.com/artenisalija/employee-check/releases/latest
 
-[![Windows Employer](https://img.shields.io/badge/Windows-Employer_Setup-2563eb?logo=windows)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Windows-Employer-Setup.exe)
-[![Windows Employee](https://img.shields.io/badge/Windows-Employee_Setup-2563eb?logo=windows)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Windows-Employee-Setup.exe)
-[![macOS Employer](https://img.shields.io/badge/macOS-Employer_DMG-111827?logo=apple)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-macOS-Employer.dmg)
-[![macOS Employee](https://img.shields.io/badge/macOS-Employee_DMG-111827?logo=apple)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-macOS-Employee.dmg)
-[![Linux Employer](https://img.shields.io/badge/Linux-Employer_DEB-f97316?logo=linux)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employer-amd64.deb)
-[![Linux Employee](https://img.shields.io/badge/Linux-Employee_DEB-f97316?logo=linux)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employee-amd64.deb)
-[![Linux Employer tar.gz](https://img.shields.io/badge/Linux-Employer_tar.gz-16a34a?logo=linux)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz)
-[![Linux Employee tar.gz](https://img.shields.io/badge/Linux-Employee_tar.gz-16a34a?logo=linux)](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz)
+## Downloads
 
-| Platform | Employer machine | Employee machines |
+Current documented version: `v0.1.5`
+
+| Platform | Employer | Employee |
 | --- | --- | --- |
-| Windows | `EmployeeCheck-v0.1.4-Windows-Employer-Setup.exe` | `EmployeeCheck-v0.1.4-Windows-Employee-Setup.exe` |
-| macOS | `EmployeeCheck-v0.1.4-macOS-Employer.dmg` | `EmployeeCheck-v0.1.4-macOS-Employee.dmg` |
-| Linux Debian/Ubuntu | `EmployeeCheck-v0.1.4-Linux-Employer-amd64.deb` | `EmployeeCheck-v0.1.4-Linux-Employee-amd64.deb` |
-| Other Linux x86_64 | `EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz` | `EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz` |
+| Windows | [Employer setup](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.5-Windows-Employer-Setup.exe) | [Employee setup](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.5-Windows-Employee-Setup.exe) |
+| macOS | [Employer DMG](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.5-macOS-Employer.dmg) | [Employee DMG](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.5-macOS-Employee.dmg) |
+| Debian/Ubuntu | [Employer DEB](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.5-Linux-Employer-amd64.deb) | [Employee DEB](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.5-Linux-Employee-amd64.deb) |
+| Other Linux x86_64 | [Employer tar.gz](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.5-Linux-Employer-x86_64.tar.gz) | [Employee tar.gz](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.5-Linux-Employee-x86_64.tar.gz) |
 
-Direct download links:
+Full uninstall files:
 
-- Windows Employer: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Windows-Employer-Setup.exe
-- Windows Employee: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Windows-Employee-Setup.exe
-- Linux Employer: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employer-amd64.deb
-- Linux Employee: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employee-amd64.deb
-- Linux Employer tar.gz: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz
-- Linux Employee tar.gz: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz
-- macOS Employer: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-macOS-Employer.dmg
-- macOS Employee: https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-macOS-Employee.dmg
+| Platform | Full wipe file |
+| --- | --- |
+| Windows | [EmployeeCheck-v0.1.5-Windows-Full-Uninstall.ps1](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.5-Windows-Full-Uninstall.ps1) |
+| macOS | [EmployeeCheck-v0.1.5-macOS-Full-Uninstall.sh](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.5-macOS-Full-Uninstall.sh) |
+| Linux | [EmployeeCheck-v0.1.5-Linux-Full-Uninstall.sh](https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.5-Linux-Full-Uninstall.sh) |
+
+## Quick Start
+
+1. Install the **Employer** app on the manager computer first.
+2. Start **Employee Check Employer** and choose the daily Excel report hour.
+3. Install the **Employee** app on each employee computer.
+4. Start **Employee Check Employee** and enter the employee name.
+5. If LAN discovery fails, enter the manager computer IP address or hostname.
+
+Use **Check Updates** to open the latest release page. Use **About** in the app
+or tray menu to see the installed version.
 
 ## Install
 
 ### Windows
 
-Manager/employer computer:
-
-1. Download `EmployeeCheck-v0.1.4-Windows-Employer-Setup.exe`.
-2. Right-click the file and choose **Run as administrator**.
-3. Complete the installer.
-4. Start **Employee Check Employer** from the Start menu or desktop shortcut.
-5. On first run, choose the daily Excel report hour and data-retention days.
-
-Employee computer:
-
-1. Download `EmployeeCheck-v0.1.4-Windows-Employee-Setup.exe`.
-2. Right-click the file and choose **Run as administrator**.
-3. Complete the installer.
-4. Start **Employee Check Employee**.
-5. Enter the employee name. If auto-discovery does not find the employer machine,
-   enter the manager computer IP address or hostname manually.
-
-The Windows installers add startup entries automatically.
-
-Updating on Windows:
-
-1. Download the newest setup file for the same role.
+1. Download the correct setup file from the table above.
 2. Right-click it and choose **Run as administrator**.
-3. The setup stops running Employee Check processes, removes the previous
-   install for that role, clears old files from the install folder, and installs
-   the new version.
+3. Complete the installer.
+4. Start **Employee Check Employer** or **Employee Check Employee**.
 
-### Linux Debian/Ubuntu
+Windows installers add startup entries automatically.
 
-Manager/employer computer:
+### macOS
 
-```bash
-wget https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employer-amd64.deb
-sudo apt install ./EmployeeCheck-v0.1.4-Linux-Employer-amd64.deb
-```
+1. Download the correct DMG from the table above.
+2. Open the DMG and launch the app.
+3. If macOS blocks the unsigned app, open **System Settings > Privacy & Security**
+   and allow it.
+4. Use **Install Startup** inside the app if it should start with the Mac.
 
-Employee computer:
+macOS may ask for Accessibility or Automation permissions before active-window
+titles or browser URLs are visible.
 
-```bash
-wget https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employee-amd64.deb
-sudo apt install ./EmployeeCheck-v0.1.4-Linux-Employee-amd64.deb
-```
+### Debian/Ubuntu
 
-### Fedora/RHEL/Rocky Linux
-
-Manager/employer computer:
+Set `ROLE` to `Employer` or `Employee`:
 
 ```bash
-curl -L -o EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz
-tar -xzf EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz
-sudo ./EmployeeCheck-v0.1.4-Linux-Employer-x86_64/install.sh
+VERSION=0.1.5
+ROLE=Employee
+PACKAGE="EmployeeCheck-v${VERSION}-Linux-${ROLE}-amd64.deb"
+wget "https://github.com/artenisalija/employee-check/releases/latest/download/${PACKAGE}"
+sudo apt install "./${PACKAGE}"
 ```
 
-Employee computer:
-
-```bash
-curl -L -o EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz
-tar -xzf EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz
-sudo ./EmployeeCheck-v0.1.4-Linux-Employee-x86_64/install.sh
-```
-
-Optional X11 idle/window helpers:
-
-```bash
-sudo dnf install xdotool xprintidle
-```
-
-### openSUSE
-
-Manager/employer computer:
-
-```bash
-curl -L -o EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz
-tar -xzf EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz
-sudo ./EmployeeCheck-v0.1.4-Linux-Employer-x86_64/install.sh
-```
-
-Employee computer:
-
-```bash
-curl -L -o EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz
-tar -xzf EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz
-sudo ./EmployeeCheck-v0.1.4-Linux-Employee-x86_64/install.sh
-```
-
-Optional X11 idle/window helpers:
-
-```bash
-sudo zypper install xdotool xprintidle
-```
-
-### Arch Linux/Manjaro
-
-Manager/employer computer:
-
-```bash
-curl -L -o EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz
-tar -xzf EmployeeCheck-v0.1.4-Linux-Employer-x86_64.tar.gz
-sudo ./EmployeeCheck-v0.1.4-Linux-Employer-x86_64/install.sh
-```
-
-Employee computer:
-
-```bash
-curl -L -o EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz
-tar -xzf EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz
-sudo ./EmployeeCheck-v0.1.4-Linux-Employee-x86_64/install.sh
-```
-
-Optional X11 idle/window helpers:
-
-```bash
-sudo pacman -S xdotool xprintidle
-```
-
-### Generic Linux x86_64
-
-Use the same `.tar.gz` package for any other x86_64 desktop Linux distro:
-
-```bash
-curl -L -o EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz
-tar -xzf EmployeeCheck-v0.1.4-Linux-Employee-x86_64.tar.gz
-sudo ./EmployeeCheck-v0.1.4-Linux-Employee-x86_64/install.sh
-```
-
-After installing, launch the app from the desktop application menu:
-
-- Manager: **Employee Check Employer**
-- Employee: **Employee Check Employee**
-
-The Linux DEB and tar.gz installers add desktop startup entries automatically.
-When installing an update, the package/install script stops the old role process
-and replaces the old role binary, desktop entry, and startup entry before copying
-the new version.
-Active-window and idle detection work best on X11. On Debian/Ubuntu, install
-these optional tools for better detection:
+Optional helpers for better X11 idle/window detection:
 
 ```bash
 sudo apt install xdotool xprintidle
 ```
 
-### macOS
-
-Manager/employer computer:
-
-1. Download `EmployeeCheck-v0.1.4-macOS-Employer.dmg`.
-2. Open the DMG and launch **Employee Check Employer**.
-3. If macOS blocks the app because it is unsigned, open **System Settings >
-   Privacy & Security** and allow it.
-4. Use **Install Startup** inside the app if you want it to start with the Mac.
-
-Employee computer:
-
-1. Download `EmployeeCheck-v0.1.4-macOS-Employee.dmg`.
-2. Open the DMG and launch **Employee Check Employee**.
-3. Enter the employee name and employer machine address if auto-discovery fails.
-4. Use **Install Startup** inside the app if you want it to start with the Mac.
-
-macOS may ask for Accessibility or Automation permissions before active-window
-titles or browser URLs are visible.
-
-Updating on macOS:
-
-1. Download the newest DMG for the same role.
-2. Quit the running Employee Check app.
-3. Open the new DMG and launch the app from it, or replace the old app bundle if
-   you copied it locally.
-
-## Quick Test
-
-For a first test with one Windows manager PC and one Linux employee machine:
-
-1. Install the Windows Employer setup file on the manager PC.
-2. Start **Employee Check Employer** and leave it running.
-3. Install the Linux Employee DEB on the Linux machine:
+### Fedora/RHEL/Rocky Linux
 
 ```bash
-wget https://github.com/artenisalija/employee-check/releases/latest/download/EmployeeCheck-v0.1.4-Linux-Employee-amd64.deb
-sudo apt install ./EmployeeCheck-v0.1.4-Linux-Employee-amd64.deb
+VERSION=0.1.5
+ROLE=Employee
+PACKAGE="EmployeeCheck-v${VERSION}-Linux-${ROLE}-x86_64.tar.gz"
+FOLDER="EmployeeCheck-v${VERSION}-Linux-${ROLE}-x86_64"
+curl -L -o "${PACKAGE}" "https://github.com/artenisalija/employee-check/releases/latest/download/${PACKAGE}"
+tar -xzf "${PACKAGE}"
+sudo "./${FOLDER}/install.sh"
+sudo dnf install xdotool xprintidle
 ```
 
-4. Start **Employee Check Employee** on Linux.
-5. Enter the employee name.
-6. If auto-discovery fails, enter the Windows manager PC IP address.
-7. Confirm the Linux employee appears in the Windows employer dashboard.
+### openSUSE
+
+```bash
+VERSION=0.1.5
+ROLE=Employee
+PACKAGE="EmployeeCheck-v${VERSION}-Linux-${ROLE}-x86_64.tar.gz"
+FOLDER="EmployeeCheck-v${VERSION}-Linux-${ROLE}-x86_64"
+curl -L -o "${PACKAGE}" "https://github.com/artenisalija/employee-check/releases/latest/download/${PACKAGE}"
+tar -xzf "${PACKAGE}"
+sudo "./${FOLDER}/install.sh"
+sudo zypper install xdotool xprintidle
+```
+
+### Arch Linux/Manjaro
+
+```bash
+VERSION=0.1.5
+ROLE=Employee
+PACKAGE="EmployeeCheck-v${VERSION}-Linux-${ROLE}-x86_64.tar.gz"
+FOLDER="EmployeeCheck-v${VERSION}-Linux-${ROLE}-x86_64"
+curl -L -o "${PACKAGE}" "https://github.com/artenisalija/employee-check/releases/latest/download/${PACKAGE}"
+tar -xzf "${PACKAGE}"
+sudo "./${FOLDER}/install.sh"
+sudo pacman -S xdotool xprintidle
+```
+
+### Generic Linux x86_64
+
+```bash
+VERSION=0.1.5
+ROLE=Employee
+PACKAGE="EmployeeCheck-v${VERSION}-Linux-${ROLE}-x86_64.tar.gz"
+FOLDER="EmployeeCheck-v${VERSION}-Linux-${ROLE}-x86_64"
+curl -L -o "${PACKAGE}" "https://github.com/artenisalija/employee-check/releases/latest/download/${PACKAGE}"
+tar -xzf "${PACKAGE}"
+sudo "./${FOLDER}/install.sh"
+```
+
+Linux packages and tar installers add desktop startup entries automatically.
+The tar installer also prints the installed full-uninstall command.
+
+## Update
+
+Windows:
+
+1. Download the newest setup file for the same role.
+2. Right-click it and choose **Run as administrator**.
+3. The setup stops Employee Check, removes the old same-role install, clears old
+   files, and installs the new version.
+
+Linux:
+
+- DEB updates can be installed with `sudo apt install ./new-file.deb`.
+- Tar updates can be installed by extracting the new tarball and running
+  `sudo ./install.sh` again.
+- Both update paths stop the old role process and replace old startup entries.
+
+macOS:
+
+1. Download the newest DMG for the same role.
+2. Quit the running app.
+3. Open the new DMG and launch the app, or replace the copied app bundle.
+
+## Full Uninstall
+
+The full uninstall files are destructive by design. They remove Employee Check,
+startup entries, settings, the employer SQLite database, and generated Excel
+reports from local user profiles.
+
+### Windows Full Wipe
+
+Download the Windows full uninstall file from the table above, then run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\EmployeeCheck-v0.1.5-Windows-Full-Uninstall.ps1
+```
+
+The script relaunches as administrator if needed.
+
+### macOS Full Wipe
+
+```bash
+VERSION=0.1.5
+SCRIPT="EmployeeCheck-v${VERSION}-macOS-Full-Uninstall.sh"
+curl -L -o "${SCRIPT}" "https://github.com/artenisalija/employee-check/releases/latest/download/${SCRIPT}"
+sudo bash "${SCRIPT}"
+```
+
+### Linux Full Wipe
+
+Debian/Ubuntu:
+
+```bash
+VERSION=0.1.5
+SCRIPT="EmployeeCheck-v${VERSION}-Linux-Full-Uninstall.sh"
+curl -L -o "${SCRIPT}" "https://github.com/artenisalija/employee-check/releases/latest/download/${SCRIPT}"
+sudo bash "${SCRIPT}"
+```
+
+Fedora/RHEL/Rocky Linux:
+
+```bash
+VERSION=0.1.5
+SCRIPT="EmployeeCheck-v${VERSION}-Linux-Full-Uninstall.sh"
+curl -L -o "${SCRIPT}" "https://github.com/artenisalija/employee-check/releases/latest/download/${SCRIPT}"
+sudo bash "${SCRIPT}"
+```
+
+openSUSE:
+
+```bash
+VERSION=0.1.5
+SCRIPT="EmployeeCheck-v${VERSION}-Linux-Full-Uninstall.sh"
+curl -L -o "${SCRIPT}" "https://github.com/artenisalija/employee-check/releases/latest/download/${SCRIPT}"
+sudo bash "${SCRIPT}"
+```
+
+Arch Linux/Manjaro:
+
+```bash
+VERSION=0.1.5
+SCRIPT="EmployeeCheck-v${VERSION}-Linux-Full-Uninstall.sh"
+curl -L -o "${SCRIPT}" "https://github.com/artenisalija/employee-check/releases/latest/download/${SCRIPT}"
+sudo bash "${SCRIPT}"
+```
+
+Generic Linux x86_64:
+
+```bash
+VERSION=0.1.5
+SCRIPT="EmployeeCheck-v${VERSION}-Linux-Full-Uninstall.sh"
+curl -L -o "${SCRIPT}" "https://github.com/artenisalija/employee-check/releases/latest/download/${SCRIPT}"
+sudo bash "${SCRIPT}"
+```
+
+If version `v0.1.5` or newer is already installed on Linux, you can also run the
+role command installed with the package:
+
+```bash
+sudo employee-check-uninstall-employee
+sudo employee-check-uninstall-employer
+```
+
+Either command wipes both roles from that machine.
 
 ## Features
 
 - Live LAN status updates without accounts or cloud services.
 - Open process/app list.
 - Active app and active window title.
-- Idle detection with bands:
-  - active: under 2 minutes
-  - yellow: 2 minutes or more
-  - orange: 5 minutes or more
-  - red: 10 minutes or more
-- Employee manual statuses: checked in, checked out, lunch, meeting.
+- Idle bands: active under 2 minutes, yellow at 2 minutes, orange at 5 minutes,
+  red at 10 minutes.
+- Employee statuses: checked in, checked out, lunch, meeting.
+- Current status time and per-status minutes.
 - Employer report hour and data-retention settings.
-- Daily Excel summary per employee.
-- Startup behavior for Windows, macOS, and Linux.
+- Daily Excel summaries per employee.
+- Visible tray/menu app with **Check Updates** and **About**.
 
 ## Limitations
 
 Website URLs and Adobe project/document names are usually exposed through active
-window titles. Some browsers and macOS can expose the current URL if the user has
-granted automation permissions. Linux active-window data depends on desktop tools
-such as `xdotool`, `xprop`, and `xprintidle`, and is less reliable on Wayland.
+window titles. Some browsers and macOS can expose the current URL if the user
+grants automation permissions.
+
+Linux active-window data works best on X11 with `xdotool`, `xprop`, and
+`xprintidle`. Wayland sessions can limit what the app can see.
 
 Unsigned Windows/macOS builds may show operating-system security warnings. For
-company rollout, sign and notarize the release artifacts through your normal IT
-process.
-
-## Setup Notes
-
-1. Install the **Employer** package on the manager machine first.
-2. Start Employee Check Employer. The first run asks for daily report hour and
-   data-retention days.
-3. Install the **Employee** package on each employee machine.
-4. Start Employee Check Employee and enter the employee name. The app tries to
-   find the employer machine automatically on the LAN; if discovery fails, enter
-   the employer IP/hostname manually.
-
-Windows installers and Linux DEB packages install startup entries for their
-selected role. On macOS, launch the app once and use **Install Startup** in the
-app window to create the LaunchAgent entry.
-
-## GitHub Releases
-
-The included GitHub Actions workflow builds all release files automatically.
-
-1. Push this project to GitHub.
-2. Create and push a version tag:
-
-```bash
-git tag vX.Y.Z
-git push origin vX.Y.Z
-```
-
-The workflow publishes these release assets:
-
-- `EmployeeCheck-vX.Y.Z-Windows-Employer-Setup.exe`
-- `EmployeeCheck-vX.Y.Z-Windows-Employee-Setup.exe`
-- `EmployeeCheck-vX.Y.Z-macOS-Employer.dmg`
-- `EmployeeCheck-vX.Y.Z-macOS-Employee.dmg`
-- `EmployeeCheck-vX.Y.Z-Linux-Employer-amd64.deb`
-- `EmployeeCheck-vX.Y.Z-Linux-Employee-amd64.deb`
-- `EmployeeCheck-vX.Y.Z-Linux-Employer-x86_64.tar.gz`
-- `EmployeeCheck-vX.Y.Z-Linux-Employee-x86_64.tar.gz`
+company rollout, sign and notarize the release artifacts through normal IT tools.
 
 ## Developer Build
 
@@ -308,36 +275,26 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-Build a Windows portable executable:
+Build Windows:
 
 ```powershell
 .\scripts\build.ps1
-```
-
-Build Windows setup installers. Requires Inno Setup 6:
-
-```powershell
 .\scripts\build.ps1 -Installer
 ```
 
-Build macOS DMGs on macOS:
+Build macOS:
 
 ```bash
 bash scripts/build_macos.sh
 ```
 
-Build Linux DEB packages on Linux:
+Build Linux:
 
 ```bash
 bash scripts/build_linux.sh
 ```
 
-For true admin-managed deployment, package and deploy the app through normal IT
-controls such as Group Policy, MDM, Jamf, Intune, or system-level services.
-
-## Portable Commands
-
-Portable builds can still run with explicit role arguments:
+Portable builds can run with explicit role arguments:
 
 ```text
 EmployeeCheck employer

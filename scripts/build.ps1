@@ -34,6 +34,9 @@ if ($Installer) {
     }
 
     New-Item -ItemType Directory -Force -Path "dist\installers" | Out-Null
+    $UninstallScript = Get-Content -Raw -Path "installer\windows\UninstallEmployeeCheck.ps1"
+    $UninstallOutput = "dist\installers\EmployeeCheck-v$Version-Windows-Full-Uninstall.ps1"
+    $UninstallScript.Replace("__VERSION__", $Version) | Set-Content -Path $UninstallOutput -Encoding utf8
     & $IsccPath /DAppVersion="$Version" /DRoleName="Employer" /DRoleArg="employer" /DOutputBaseFilename="EmployeeCheck-v$Version-Windows-Employer-Setup" "installer\windows\EmployeeCheck.iss"
     & $IsccPath /DAppVersion="$Version" /DRoleName="Employee" /DRoleArg="employee" /DOutputBaseFilename="EmployeeCheck-v$Version-Windows-Employee-Setup" "installer\windows\EmployeeCheck.iss"
     Write-Host "Built Windows installers in dist\installers"

@@ -26,7 +26,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: windows-installers
-          path: dist/installers/*.exe
+          path: dist/installers/*
 
   macos:
     name: macOS DMGs
@@ -41,7 +41,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: macos-dmgs
-          path: dist/*.dmg
+          path: |
+            dist/*.dmg
+            dist/*.sh
 
   linux:
     name: Linux DEBs
@@ -61,6 +63,7 @@ jobs:
           path: |
             dist/*.deb
             dist/*.tar.gz
+            dist/*.sh
 
   github-release:
     name: Publish GitHub release

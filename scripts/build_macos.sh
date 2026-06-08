@@ -21,6 +21,9 @@ PY
 rm -rf build dist
 mkdir -p dist
 
+sed "s/__VERSION__/${VERSION}/g" installer/macos/uninstall_employee_check.sh > "dist/EmployeeCheck-v${VERSION}-macOS-Full-Uninstall.sh"
+chmod 755 "dist/EmployeeCheck-v${VERSION}-macOS-Full-Uninstall.sh"
+
 .venv/bin/pyinstaller --noconfirm --clean --windowed --name EmployeeCheckEmployer --onefile run_employee_check_employer.py
 hdiutil create -volname "Employee Check Employer" -srcfolder "dist/EmployeeCheckEmployer.app" -ov -format UDZO "dist/EmployeeCheck-v${VERSION}-macOS-Employer.dmg"
 
